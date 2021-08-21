@@ -1,5 +1,5 @@
 import {J} from "../utils";
-import {OBACore,OBACoreConfig,masterConfig} from "../../src";
+import {OBACoreApi,OBACoreConfig,masterConfig} from "../../src";
 
 type OBACoreEvents = {
   config:OBACoreConfig;
@@ -8,10 +8,10 @@ type OBACoreEvents = {
   test:number;
 };
 export const obaCoreEmitterInitTests = () => J.desc("AM Emitter Init",() => {
-  let m:OBACore<OBACoreEvents>,c:OBACoreConfig,events:OBACore<OBACoreEvents>["events"];
+  let m:OBACoreApi<OBACoreEvents>,c:OBACoreConfig,events:OBACoreApi<OBACoreEvents>["events"];
   it("init",async () => {
     c = masterConfig("OBA_CORE");
-    m = new OBACore({events:c.events});
+    m = new OBACoreApi({events:c.events});
     J.is(m);
     J.true(m.events);
     events = m.events});

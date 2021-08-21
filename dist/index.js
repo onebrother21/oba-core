@@ -10,5 +10,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const modules_1 = require("./modules");
 __exportStar(require("./modules"), exports);
+exports.default = modules_1.OBACoreApi;
 //# sourceMappingURL=index.js.map

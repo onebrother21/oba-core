@@ -6,8 +6,8 @@ import {OBACoreDB} from "./db-main";
 import {OBACoreType,OBACoreConfig} from "./core-types";
 import * as ob from "@onebro/oba-common";
 
-export interface OBACore<EV> extends OBACoreType<EV> {}
-export class OBACore<EV> {
+export interface OBACoreApi<EV> extends OBACoreType<EV> {}
+export class OBACoreApi<EV> {
   start = async():Promise<void> => await this.db.start();
   constructor(config:OBACoreConfig) {
     this.config = config;
@@ -19,5 +19,5 @@ export class OBACore<EV> {
     if(config.vars && config.vars.verbose) ob.ok("OBA Core Api configuration done...");
   }
 }
-export default OBACore;
+export default OBACoreApi;
 export * from "./core-types";

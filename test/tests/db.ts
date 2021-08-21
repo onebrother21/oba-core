@@ -1,13 +1,13 @@
 import {J} from "../utils";
 import mongoose,{Schema} from "mongoose";
-import {OBACore,OBACoreConfig,masterConfig} from "../../src";
+import {OBACoreApi,OBACoreConfig,masterConfig} from "../../src";
 
 export const obaCoreDBInitTests = () => J.desc("AM DB Init",() => {
   beforeAll(async () => {
     const db = await mongoose.createConnection("mongodb://localhost:27017/ob1",{useNewUrlParser:true,useUnifiedTopology:true});
     await db.dropDatabase();
   },1E9);
-  let m:OBACore<null>,c:OBACoreConfig,db:OBACore<null>["db"],model:any,id:any;
+  let m:OBACoreApi<null>,c:OBACoreConfig,db:OBACoreApi<null>["db"],model:any,id:any;
   const schema = new Schema({
     name:{type:String,unique:true,required:true,index:true},
     value:Number},{
@@ -17,7 +17,7 @@ export const obaCoreDBInitTests = () => J.desc("AM DB Init",() => {
   J.desc("DB",() => {
     it("init",async () => {
       c = masterConfig("OBA_CORE");
-      m = new OBACore({db:c.db});
+      m = new OBACoreApi({db:c.db});
       J.is(m);
       J.true(m.db);
       db = m.db},1E9);

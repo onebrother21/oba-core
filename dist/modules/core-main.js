@@ -31,14 +31,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OBACore = void 0;
+exports.OBACoreApi = void 0;
 const vars_main_1 = require("./vars-main");
 const error_factory_main_1 = require("./error-factory-main");
 const emitter_main_1 = require("./emitter-main");
 const logger_main_1 = require("./logger-main");
 const db_main_1 = require("./db-main");
 const ob = __importStar(require("@onebro/oba-common"));
-class OBACore {
+class OBACoreApi {
     constructor(config) {
         this.start = () => __awaiter(this, void 0, void 0, function* () { return yield this.db.start(); });
         this.config = config;
@@ -56,7 +56,7 @@ class OBACore {
             ob.ok("OBA Core Api configuration done...");
     }
 }
-exports.OBACore = OBACore;
-exports.default = OBACore;
+exports.OBACoreApi = OBACoreApi;
+exports.default = OBACoreApi;
 __exportStar(require("./core-types"), exports);
 //# sourceMappingURL=core-main.js.map
