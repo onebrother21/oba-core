@@ -1,5 +1,5 @@
 import {OBACoreVars} from "./vars-main";
-import {OBACoreErrors} from "./error-factory-main";
+import {OBACoreErrorFactory} from "./error-factory-main";
 import {OBACoreEmitter} from "./emitter-main";
 import {OBACoreLogger} from "./logger-main";
 import {OBACoreDB} from "./db-main";
@@ -12,7 +12,7 @@ export class OBACore<EV> {
   constructor(config:OBACoreConfig) {
     this.config = config;
     if(config.events) this.events = new OBACoreEmitter<EV>(config.events);
-    if(config.errors) this.e = new OBACoreErrors(config.errors);
+    if(config.errors) this.e = new OBACoreErrorFactory(config.errors);
     if(config.vars) this.vars = new OBACoreVars(config.vars);
     if(config.logger) this.logger = new OBACoreLogger(config.logger);
     if(config.db) this.db = new OBACoreDB(config.db);

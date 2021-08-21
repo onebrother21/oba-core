@@ -1,6 +1,5 @@
-import { Enum,PartialEnum,DataMap,Strings, MiscInfo, } from "@onebro/oba-common";
+import { OptionalEnum } from "@onebro/oba-common";
 
-export type OptionalEnum<T,k extends string = undefined,j extends string = undefined> = Enum<k,T> & PartialEnum<j,T>;
 export type OBACoreVarsObj =
 OptionalEnum<string,"name"|"host"|"env"|"entry"|"version","id"|"tkn"> &
 OptionalEnum<number,"port"> &

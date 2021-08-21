@@ -1,4 +1,4 @@
 import {Errors,Methods,AppError} from "@onebro/oba-common";
 
-export interface OBACoreErrorsConfig extends Errors {}
-export interface OBACoreErrorsType extends Methods<AppError>{}
+export interface OBACoreErrorFactoryConfig extends Errors {}
+export interface OBACoreErrorFactoryType extends Methods<AppError>{}

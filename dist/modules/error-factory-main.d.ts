@@ -1,15 +1,15 @@
 import { AppError } from "@onebro/oba-common";
-import { OBACoreErrorsType, OBACoreErrorsConfig } from "./error-factory-types";
-export interface OBACoreErrors extends OBACoreErrorsType {
+import { OBACoreErrorFactoryType, OBACoreErrorFactoryConfig } from "./error-factory-types";
+export interface OBACoreErrorFactory extends OBACoreErrorFactoryType {
 }
-export declare class OBACoreErrors {
+export declare class OBACoreErrorFactory {
     format<T>(e: T): AppError;
     make(e: AppError, k: string): AppError;
     make(e: AppError, k: string, status: number): AppError;
     make(e: AppError, k: string, data: string): AppError;
     make(e: AppError, k: string, status: number, data: string): AppError;
     map(e: Error | AppError): AppError;
-    constructor(config: OBACoreErrorsConfig);
+    constructor(config: OBACoreErrorFactoryConfig);
 }
-export default OBACoreErrors;
+export default OBACoreErrorFactory;
 export * from "./error-factory-types";

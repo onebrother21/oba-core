@@ -1,10 +1,10 @@
 import {MongoError} from "mongodb";
 import {Errors,Methods,AppError} from "@onebro/oba-common";
 import * as ob from "@onebro/oba-common";
-import { OBACoreErrorsType, OBACoreErrorsConfig } from "./error-factory-types";
+import { OBACoreErrorFactoryType, OBACoreErrorFactoryConfig } from "./error-factory-types";
 
-export interface OBACoreErrors extends OBACoreErrorsType {}
-export class OBACoreErrors {
+export interface OBACoreErrorFactory extends OBACoreErrorFactoryType {}
+export class OBACoreErrorFactory {
   format<T>(e:T){return new AppError(e);}
   make(e:AppError,k:string):AppError;
   make(e:AppError,k:string,status:number):AppError;
@@ -35,6 +35,6 @@ export class OBACoreErrors {
     const errObj = {...errTemplate.json(),info:e.message,stack:e.stack};
     errObj.status = (e as AppError).status||errObj.status;
     return new AppError(errObj);}
-  constructor(config:OBACoreErrorsConfig){for(const k in config) this[k] = this.make.bind(null,config[k],k);}}
-export default OBACoreErrors;
+  constructor(config:OBACoreErrorFactoryConfig){for(const k in config) this[k] = this.make.bind(null,config[k],k);}}
+export default OBACoreErrorFactory;
 export * from "./error-factory-types";

@@ -22,11 +22,11 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OBACoreErrors = void 0;
+exports.OBACoreErrorFactory = void 0;
 const mongodb_1 = require("mongodb");
 const oba_common_1 = require("@onebro/oba-common");
 const ob = __importStar(require("@onebro/oba-common"));
-class OBACoreErrors {
+class OBACoreErrorFactory {
     format(e) { return new oba_common_1.AppError(e); }
     make(e, k, status, data) {
         const errCode = k.toLocaleUpperCase();
@@ -61,7 +61,7 @@ class OBACoreErrors {
     constructor(config) { for (const k in config)
         this[k] = this.make.bind(null, config[k], k); }
 }
-exports.OBACoreErrors = OBACoreErrors;
-exports.default = OBACoreErrors;
+exports.OBACoreErrorFactory = OBACoreErrorFactory;
+exports.default = OBACoreErrorFactory;
 __exportStar(require("./error-factory-types"), exports);
 //# sourceMappingURL=error-factory-main.js.map

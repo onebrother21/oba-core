@@ -45,7 +45,7 @@ class OBACore {
         if (config.events)
             this.events = new emitter_main_1.OBACoreEmitter(config.events);
         if (config.errors)
-            this.e = new error_factory_main_1.OBACoreErrors(config.errors);
+            this.e = new error_factory_main_1.OBACoreErrorFactory(config.errors);
         if (config.vars)
             this.vars = new vars_main_1.OBACoreVars(config.vars);
         if (config.logger)
