@@ -57,5 +57,5 @@ export const obaCoreLoggerInitTests = () => J.desc("AM Logger Init",() => {
       done();
     };
     logger.query(logQuery,cb);
-  });
+  },1E9);
 });
