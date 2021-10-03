@@ -1,5 +1,5 @@
-import {clear} from "./utils";
+import {J} from "./utils";
 import {allTests} from "./tests";
 
-clear();
+J.utils.clear();
 allTests();

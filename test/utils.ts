@@ -1,6 +1,26 @@
-export const clear = () => process.stdout.write("\x1Bc");
-export const J = {
+import mongoose from "mongoose";
+import OBACoreApi,{masterConfig} from "../src";
+
+export const utils = {
+  sleep:(n:number) => new Promise(done => setTimeout(done,n)),
+  clear:() => process.stdout.write("\x1Bc"),
   desc:describe,
+  refreshDb:async () => {
+    const db = await mongoose.createConnection("mongodb://localhost:27017/ob1",{useNewUrlParser:true,useUnifiedTopology:true});
+    await db.dropDatabase();
+  },
+  init:async () => {
+    try{
+      const {db,errors} = masterConfig("OBA_API");
+      db.connections = {onebrother:'mongodb://localhost:27017/ob1'};
+      const master:OBACoreApi<null> = new OBACoreApi({db,errors});
+      await master.db.start();
+      return {master};}
+    catch(e){console.error(e);throw e;}
+  },
+};
+export const J = {
+  utils,
   type:(a:any,b:string) => expect(typeof a).toBe(b),
   instance:(a:any,b:any) => expect(a instanceof b).toBe(true),
   arr:(a:any) => expect(Array.isArray(a)).toBe(true),
@@ -19,4 +39,3 @@ export const J = {
   error:(o:any) => expect(o).toBeInstanceOf(Error),
   noterror:(o:any) => expect(o).not.toBeInstanceOf(Error),
 };
-export const sleep = (n:number) => new Promise(done => setTimeout(done,n));

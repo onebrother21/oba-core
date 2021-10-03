@@ -13,26 +13,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OBACoreVars = void 0;
 class OBACoreVars {
     set(vars) { Object.assign(this, vars); }
-    constructor(config) {
-        this.name = config.name;
-        this.host = process.env.HOST || config.host;
-        this.port = Number(process.env.PORT) || config.port;
-        this.env = process.env.NODE_ENV;
-        this.entry = config.entry;
-    }
+    constructor(config) { this.set(config); }
 }
 exports.OBACoreVars = OBACoreVars;
 exports.default = OBACoreVars;
 __exportStar(require("./vars-types"), exports);
-/*
-export interface OBACoreVarsExt extends OBACoreVars {}
-export class OBACoreVarsExt extends OBACoreVars{
-  constructor(config:OBACoreVarsConfig){
-    super(config);
-    this.settings = config.settings;
-    this.providers = config.providers||{};
-    this.consumers = config.consumers||{};
-    this.whitelist = config.whitelist||[];}}
-export default OBACoreVarsExt;
-*/ 
 //# sourceMappingURL=vars-main.js.map

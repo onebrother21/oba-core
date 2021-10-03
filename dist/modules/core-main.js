@@ -53,7 +53,7 @@ class OBACoreApi {
         if (config.db)
             this.db = new db_main_1.OBACoreDB(config.db);
         if (config.vars && config.vars.verbose)
-            ob.ok("OBA Core Api configuration done...");
+            ob.ok(this.vars.name, " Running @...", Date.now());
     }
 }
 exports.OBACoreApi = OBACoreApi;

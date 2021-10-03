@@ -1,5 +1,5 @@
-import {J} from "../utils";
-import {OBACoreApi,OBACoreConfig,masterConfig} from "../../src";
+import {J} from "../../utils";
+import {OBACoreApi,OBACoreConfig,masterConfig} from "../../../src";
 
 type OBACoreEvents = {
   config:OBACoreConfig;
@@ -7,14 +7,14 @@ type OBACoreEvents = {
   dbOK:{name:string,uri:string};
   test:number;
 };
-export const obaCoreEmitterInitTests = () => J.desc("AM Emitter Init",() => {
-  let m:OBACoreApi<OBACoreEvents>,c:OBACoreConfig,events:OBACoreApi<OBACoreEvents>["events"];
+export const obaCoreEmitterInitTests = () => J.utils.desc("AM Emitter Init",() => {
+  let core:OBACoreApi<OBACoreEvents>,c:OBACoreConfig,events:OBACoreApi<OBACoreEvents>["events"];
   it("init",async () => {
     c = masterConfig("OBA_CORE");
-    m = new OBACoreApi({events:c.events});
-    J.is(m);
-    J.true(m.events);
-    events = m.events});
+    core = new OBACoreApi({events:c.events});
+    J.is(core);
+    J.true(core.events);
+    events = core.events});
   it("register listener",async () => {
     events.emit("config",c);
     events.on("test",b => console.log({test:b}));

@@ -14,5 +14,5 @@ export declare const printMsg: (m: LogEntry) => string;
 export declare const makeFormat: (name: string) => winston.Logform.Format;
 export declare const makeDir: (path: string) => true | void;
 export declare const makeTransport: (level: string, dirname: string) => winston.transports.FileTransportInstance;
-export declare const makeLogMsg: (e: AppError) => string;
+export declare const makeLogMsg: (e: AppError | any) => string;
 export declare const makeLogger: (c: WinstonLoggerConfig) => WinstonLogger;

@@ -4,27 +4,24 @@ import { DeepPartial } from "@onebro/oba-common";
 import { OBACoreConfig } from "./core-main";
 
 const setDefaultConfigWithEnvironment = (envPrefix:string):OBACoreConfig => {
-  const getDBUri = () => {
-    const env = process.env.NODE_ENV;
-    let uri = `${envPrefix}_MONGODB`;
-    switch(true){
-      case env === "production":
-      case (/live-db/.test(env)):uri = env+"_PROD";break;
-      default:uri = env+"_LOCAL";break;
-    }
-    return uri;
-  };
+  const prefix = envPrefix.toLocaleUpperCase();
+  const env = process.env.NODE_ENV.toLocaleUpperCase();
+  const name = process.env[`${prefix}_NAME`];
+  const mode = process.env[`${prefix}_MODE`];
+  let uri = `${prefix}_MONGODB`;
+  switch(true){
+    case env === "production":
+    case (/live-db/.test(env)):uri += "_PROD";break;
+    default:uri += "_LOCAL";break;
+  }
+  const dbs =  {[name]:process.env[uri]};
   const initial:OBACoreConfig = config.get("appconfig");
   const atRuntime:DeepPartial<OBACoreConfig> = {
-    vars:{
-      name:process.env[`${envPrefix}_NAME`],
-      env:process.env.NODE_ENV,
-      mode:process.env[`${envPrefix}_MODE`],
-      verbose:false,
-    },
-    logger:{label:process.env[`${envPrefix}_NAME`]},
-    db:{connections:{[envPrefix]:getDBUri()}},
+    vars:{name,env,mode,verbose:false},
+    logger:{label:name},
+    db:{connections:dbs},
   };
   const masterConfig = deepmerge(initial,atRuntime) as OBACoreConfig;
-  return masterConfig;};
+  return masterConfig;
+};
 export {setDefaultConfigWithEnvironment as masterConfig};

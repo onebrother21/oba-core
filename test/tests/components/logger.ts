@@ -1,12 +1,12 @@
-import {J} from "../utils";
+import {J} from "../../utils";
 import fs from "fs";
 import winston from "winston";
 import {AppError} from "@onebro/oba-common";
-import {OBACoreApi,OBACoreConfig,masterConfig} from "../../src";
+import {OBACoreApi,OBACoreConfig,masterConfig} from "../../../src";
 import path from "path";
 
-export const obaCoreLoggerInitTests = () => J.desc("AM Logger Init",() => {
-  let m:OBACoreApi<null>,c:OBACoreConfig,logger:OBACoreApi<null>["logger"],logmsg:string;
+export const obaCoreLoggerInitTests = () => J.utils.desc("AM Logger Init",() => {
+  let core:OBACoreApi<null>,c:OBACoreConfig,logger:OBACoreApi<null>["logger"],logmsg:string;
   const logQuery:winston.QueryOptions = {
     from:new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
     until:new Date(),
@@ -24,10 +24,10 @@ export const obaCoreLoggerInitTests = () => J.desc("AM Logger Init",() => {
     stack:"...stacktraces here"});
   it("init",async () => {
     c = masterConfig("OBA_CORE");
-    m = new OBACoreApi({logger:{...c.logger,dirname:path.join(__dirname,"/../../logs")}});
-    J.is(m);
-    J.true(m.logger);
-    logger = m.logger});
+    core = new OBACoreApi({logger:{...c.logger,dirname:path.join(__dirname,"/../../../logs")}});
+    J.is(core);
+    J.true(core.logger);
+    logger = core.logger});
   it(`has logging methods`,async () => {
     J.is(logger.access);
     J.is(logger.warn);
@@ -37,7 +37,7 @@ export const obaCoreLoggerInitTests = () => J.desc("AM Logger Init",() => {
     J.is(logger.debug);});
   it(`has query methods`,async () => J.is(logger.query));
   it(`has logs directory`,async () => {
-    const hasDir = fs.existsSync(m.config.logger.dirname);
+    const hasDir = fs.existsSync(core.config.logger.dirname);
     J.true(hasDir);});
   it(`makes log msg from error`,async () => {
     logmsg = logger.getMsg(e);

@@ -1,14 +1,14 @@
-import {J} from "../utils";
-import {OBACoreApi,OBACoreConfig,masterConfig} from "../../src";
+import {J} from "../../utils";
+import {OBACoreApi,OBACoreConfig,masterConfig} from "../../../src";
 
-export const obaCoreErrorFactoryInitTests = () => J.desc("AM Errors Init",() => {
-  let m:OBACoreApi<null>,c:OBACoreConfig,e:OBACoreApi<null>["e"];
+export const obaCoreErrorFactoryInitTests = () => J.utils.desc("AM Errors Init",() => {
+  let core:OBACoreApi<null>,c:OBACoreConfig,e:OBACoreApi<null>["e"];
   it("init",async () => {
     c = masterConfig("OBA_CORE");
-    m = new OBACoreApi({errors:c.errors});
-    J.is(m);
-    J.true(m.e);
-    e = m.e;});
+    core = new OBACoreApi({errors:c.errors});
+    J.is(core);
+    J.true(core.e);
+    e = core.e;});
   it("404",async () => {
     J.error(e.notfound());
     console.error(e.notfound().message);});

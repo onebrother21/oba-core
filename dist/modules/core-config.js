@@ -7,19 +7,26 @@ exports.masterConfig = void 0;
 const config_1 = __importDefault(require("config"));
 const deepmerge_1 = __importDefault(require("deepmerge"));
 const setDefaultConfigWithEnvironment = (envPrefix) => {
-    const prod = process.env.NODE_ENV === "production";
-    const dbUri = process.env[`${envPrefix}_MONGODB${!prod ? "_LOCAL" : "_PROD"}`];
+    const prefix = envPrefix.toLocaleUpperCase();
+    const env = process.env.NODE_ENV.toLocaleUpperCase();
+    const name = process.env[`${prefix}_NAME`];
+    const mode = process.env[`${prefix}_MODE`];
+    let uri = `${prefix}_MONGODB`;
+    switch (true) {
+        case env === "production":
+        case (/live-db/.test(env)):
+            uri += "_PROD";
+            break;
+        default:
+            uri += "_LOCAL";
+            break;
+    }
+    const dbs = { [name]: process.env[uri] };
     const initial = config_1.default.get("appconfig");
     const atRuntime = {
-        vars: {
-            name: process.env[`${envPrefix}_NAME`],
-            host: process.env[`${envPrefix}_HOST`],
-            port: Number(process.env[`${envPrefix}_PORT`]),
-            env: process.env.NODE_ENV,
-            verbose: false
-        },
-        logger: { label: process.env[`${envPrefix}_NAME`] },
-        db: { connections: { [envPrefix]: dbUri } },
+        vars: { name, env, mode, verbose: false },
+        logger: { label: name },
+        db: { connections: dbs },
     };
     const masterConfig = deepmerge_1.default(initial, atRuntime);
     return masterConfig;

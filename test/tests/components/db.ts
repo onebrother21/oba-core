@@ -1,34 +1,39 @@
-import {J} from "../utils";
-import mongoose,{Schema} from "mongoose";
-import {OBACoreApi,OBACoreConfig,masterConfig} from "../../src";
+import {J} from "../../utils";
+import {Schema} from "mongoose";
+import {OBACoreApi,OBACoreConfig,masterConfig} from "../../../src";
 
-export const obaCoreDBInitTests = () => J.desc("AM DB Init",() => {
-  beforeAll(async () => {
-    const db = await mongoose.createConnection("mongodb://localhost:27017/ob1",{useNewUrlParser:true,useUnifiedTopology:true});
-    await db.dropDatabase();
-  },1E9);
-  let m:OBACoreApi<null>,c:OBACoreConfig,db:OBACoreApi<null>["db"],model:any,id:any;
+export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
+  let core:OBACoreApi<null>,
+  c:OBACoreConfig,
+  cName = "OBA_CORE",
+  db:OBACoreApi<null>["db"],
+  dbName:string = "OBACoreApi",
+  model:any,id:any;
   const schema = new Schema({
     name:{type:String,unique:true,required:true,index:true},
     value:Number},{
     toObject:{virtuals:true},
     toJSON:{virtuals:true}});
   schema.virtual("other").get(function(){return this.name + "OtherShit"});
-  J.desc("DB",() => {
+  J.utils.desc("DB",() => {
     it("init",async () => {
-      c = masterConfig("OBA_CORE");
-      m = new OBACoreApi({db:c.db});
-      J.is(m);
-      J.true(m.db);
-      db = m.db},1E9);
-    it(`has connections and "model" method`,async () => {
+      c = masterConfig(cName);
+      core = new OBACoreApi({db:c.db});
+      J.is(core);
+      J.true(core.db);
+      db = core.db;
+    },1E9);
+    it(`has connections`,async () => {
       await db.start();
-      model = await db.model("OBA_CORE","TestModel",schema,"testmodels");
-      J.true(db.get("OBA_CORE"));
-      J.prop(db.get("OBA_CORE").client.models,"TestModel");
+      console.log(db);
+      J.true(db.get(dbName));
+    },1E9);
+    it(`has "model" method`,async () => {
+      model = await db.model(dbName,"TestModel",schema,"testmodels");
+      J.prop(db.get(dbName).client.models,"TestModel");
     },1E9);
   });
-  J.desc("Mongoose Conn",() => {
+  J.utils.desc("Mongoose Conn",() => {
     it(`create & save`,async () => {
       const m = new model({name:"Johnny"});
       J.is(m);
@@ -36,7 +41,8 @@ export const obaCoreDBInitTests = () => J.desc("AM DB Init",() => {
       J.is(m.other,"JohnnyOtherShit");
       await m.save();
       console.log(m.toJSON());
-      id = m._id;},1e9);
+      id = m._id;
+    },1e9);
     it(`fetch by id`,async () => {
       const m = await model.findById(id);
       J.is(m);},1E9);
