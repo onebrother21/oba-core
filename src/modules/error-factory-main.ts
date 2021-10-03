@@ -35,6 +35,7 @@ export class OBACoreErrorFactory {
     const errObj = {...errTemplate.json(),info:e.message,stack:e.stack};
     errObj.status = (e as AppError).status||errObj.status;
     return new AppError(errObj);}
-  constructor(config:OBACoreErrorFactoryConfig){for(const k in config) this[k] = this.make.bind(null,config[k],k);}}
+  constructor(config:OBACoreErrorFactoryConfig){for(const k in config) this[k] = this.make.bind(null,config[k],k);}
+}
 export default OBACoreErrorFactory;
 export * from "./error-factory-types";

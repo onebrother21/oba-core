@@ -16,7 +16,7 @@ export class OBACoreApi<EV> {
     if(config.vars) this.vars = new OBACoreVars(config.vars);
     if(config.logger) this.logger = new OBACoreLogger(config.logger);
     if(config.db) this.db = new OBACoreDB(config.db);
-    if(config.vars && config.vars.verbose) ob.ok("OBA Core Api configuration done...");
+    if(config.vars && config.vars.verbose) ob.ok(this.vars.name," Running @...",Date.now());
   }
 }
 export default OBACoreApi;

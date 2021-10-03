@@ -1,6 +1,6 @@
 import fs from "fs";
-import winston,{LogEntry,transports,format} from "winston";
 import path from "path";
+import winston,{LogEntry,transports,format} from "winston";
 import { WinstonLogger,WinstonLoggerConfig,} from "./logger-types";
 import { AppError,appLocals as locals} from "@onebro/oba-common";
 
@@ -15,18 +15,29 @@ export const makeTransport = (level:string,dirname:string) => new (transports.Fi
   filename:path.join(dirname,`/${level}.log`),
   level,
   handleExceptions:level == "error"||level == "critical"});
-export const makeLogMsg = (e:AppError) => {
-  return `{
-    time:${new Date().toLocaleString("en-US",locals.dateFormat as any)},
-    name:${e.name},
-    message:"${e.message}",
-    warning:${!!e.warning},
-    status:${e.status},
-    code:${e.code?e.code.toString():"-"},
-    info:"${e.info?JSON.stringify(e.info):null}",
-    errors":${e.errors?JSON.stringify(e.errors):"-"}",
-    stack:${e.stack},
-  }`;};
+export const makeLogMsg = (e:AppError|any) => {
+  switch(true){
+    case e instanceof Error:{
+      return `{
+        time:${new Date().toLocaleString("en-US",locals.dateFormat as any)},
+        name:${e.name},
+        message:"${e.message}",
+        warning:${!!e.warning},
+        status:${e.status},
+        code:${e.code?e.code.toString():"-"},
+        info:"${e.info?JSON.stringify(e.info):null}",
+        errors":${e.errors?JSON.stringify(e.errors):"-"}",
+        stack:${e.stack},
+      }`;
+    }
+    default:{
+      return `{
+        time:${new Date().toLocaleString("en-US",locals.dateFormat as any)},
+      }`;
+    }
+  }
+};
+//create access msg
 export const makeLogger = (c:WinstonLoggerConfig) => winston.createLogger({
   levels,
   format:makeFormat(c.label),
