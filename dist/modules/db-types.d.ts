@@ -1,4 +1,4 @@
-import { ConnectionOptions, Connection } from "mongoose";
+import { Connection, ConnectionOptions } from "mongoose";
 import { DataMap, Strings } from "@onebro/oba-common";
 export declare type DBConnection = {
     uri: string;

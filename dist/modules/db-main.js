@@ -42,20 +42,22 @@ const ob = __importStar(require("@onebro/oba-common"));
 mongoose_1.default.Promise = bluebird_1.default;
 class OBACoreDB {
     constructor(config) {
-        this.model = (dbName, modelName, schema, collection) => __awaiter(this, void 0, void 0, function* () {
+        this.connections = {};
+        this.config = config;
+    }
+    model(dbName, modelName, schema, collection) {
+        return __awaiter(this, void 0, void 0, function* () {
             const db = this.get(dbName).client;
             const model = db.model(modelName, schema, collection);
             yield model.init();
             return model;
         });
-        this.connections = {};
-        this.config = config;
     }
     start() {
         return __awaiter(this, void 0, void 0, function* () {
             const { connections, opts } = this.config;
             const start = (name, uri, opts) => __awaiter(this, void 0, void 0, function* () {
-                ob.trace(`Connecting DB @ ${uri}`);
+                ob.trace(`Attempting to connect @ ${uri}`);
                 try {
                     const newConnection = yield mongoose_1.default.createConnection(uri, opts);
                     const connection = { uri, client: newConnection };
@@ -63,7 +65,7 @@ class OBACoreDB {
                     ob.ok(`MongoDB connected -> ${name.toLocaleUpperCase()}`);
                 }
                 catch (e) {
-                    ob.warn(`MongoDB connection failed ${e.message || e}`);
+                    ob.warn(`MongoDB connection failed -> ${e.message || e}`);
                     this.connections[name] = null;
                 }
             });
