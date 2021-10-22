@@ -1,6 +1,6 @@
 import {J} from "../../utils";
 import {Schema} from "mongoose";
-import {OBACoreApi,OBACoreConfig,masterConfig} from "../../../src";
+import {OBACoreApi,OBACoreConfig,coreConfig} from "../../../src";
 
 export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
   let core:OBACoreApi<null>,
@@ -17,7 +17,7 @@ export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
   schema.virtual("other").get(function(){return this.name + "OtherShit"});
   J.utils.desc("DB",() => {
     it("init",async () => {
-      c = masterConfig(cName);
+      c = coreConfig(cName);
       core = new OBACoreApi({db:c.db});
       J.is(core);
       J.true(core.db);

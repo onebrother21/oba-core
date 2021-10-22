@@ -1,4 +1,4 @@
-import { OBACoreEmitterType, OBACoreEmitterConfig } from "./emitter-types";
+import { OBACoreEmitterType } from "./emitter-types";
 import { Keys } from "@onebro/oba-common";
 export interface OBACoreEmitter<T> extends OBACoreEmitterType<T & {
     "shutdown": boolean;
@@ -21,7 +21,7 @@ export declare class OBACoreEmitter<T> {
     }> | Partial<T & {
         shutdown: boolean;
     }>[k];
-    constructor(config: OBACoreEmitterConfig);
+    constructor();
 }
 export default OBACoreEmitter;
 export * from "./emitter-types";

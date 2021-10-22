@@ -1,26 +1,29 @@
 import {J} from "../../utils";
-import {OBACoreApi,OBACoreConfig,masterConfig} from "../../../src";
+import {OBACoreApi,OBACoreConfig,coreConfig} from "../../../src";
 
 type OBACoreEvents = {
   config:OBACoreConfig;
-  serverOK:void;
+  serverOK:{name:string,host:string;port:number;env:string};
   dbOK:{name:string,uri:string};
   test:number;
 };
 export const obaCoreEmitterInitTests = () => J.utils.desc("AM Emitter Init",() => {
   let core:OBACoreApi<OBACoreEvents>,c:OBACoreConfig,events:OBACoreApi<OBACoreEvents>["events"];
   it("init",async () => {
-    c = masterConfig("OBA_CORE");
+    c = coreConfig("OBA_CORE");
     core = new OBACoreApi({events:c.events});
     J.is(core);
     J.true(core.events);
-    events = core.events});
+    events = core.events;
+  });
   it("register listener",async () => {
-    events.emit("config",c);
+    events.on("config",b => console.log({config:b}));
     events.on("test",b => console.log({test:b}));
     events.on("dbOK",(o:any) => console.log(o));
-    J.includes(events.listeners,"test");});
+    J.includes(events.listeners,"test");
+  });
   it("send known event",async () => {
+    events.emit("config",c);
     events.emit("dbOK",{name:"ob",uri:"siofhoidjf"});
     J.is(events.values["dbOK"].name,"ob");})
   it("send unknown event",async () => {

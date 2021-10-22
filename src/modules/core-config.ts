@@ -21,7 +21,7 @@ const setDefaultConfigWithEnvironment = (envPrefix:string):OBACoreConfig => {
     logger:{label:name},
     db:{connections:dbs},
   };
-  const masterConfig = deepmerge(initial,atRuntime) as OBACoreConfig;
-  return masterConfig;
+  const coreConfig = deepmerge(initial,atRuntime) as OBACoreConfig;
+  return coreConfig;
 };
-export {setDefaultConfigWithEnvironment as masterConfig};
+export {setDefaultConfigWithEnvironment as coreConfig};

@@ -16,12 +16,9 @@ export declare type WinstonLoggerConfig = {
     label?: string;
     uri?: string;
 };
-export declare type WinstonLoggerType<T> = winston.Logger & Record<keyof T, winston.LeveledLogMethod>;
-export declare type WinstonLogger = WinstonLoggerType<WinstonLoggerLevels> & {
+export declare type OBACoreLoggerConfig = WinstonLoggerConfig;
+export declare type WinstonLoggerType = winston.Logger & Record<keyof WinstonLoggerLevels, winston.LeveledLogMethod>;
+export declare type OBACoreLoggerType = WinstonLoggerType & {
     makeDir: (path: string) => true | void;
     getMsg: (e: AppError) => string;
 };
-export interface OBACoreLoggerConfig extends WinstonLoggerConfig {
-}
-export interface OBACoreLoggerType extends WinstonLogger {
-}

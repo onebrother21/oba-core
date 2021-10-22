@@ -2,7 +2,7 @@ import {J} from "../../utils";
 import fs from "fs";
 import winston from "winston";
 import {AppError} from "@onebro/oba-common";
-import {OBACoreApi,OBACoreConfig,masterConfig} from "../../../src";
+import {OBACoreApi,OBACoreConfig,coreConfig} from "../../../src";
 import path from "path";
 
 export const obaCoreLoggerInitTests = () => J.utils.desc("AM Logger Init",() => {
@@ -23,7 +23,7 @@ export const obaCoreLoggerInitTests = () => J.utils.desc("AM Logger Init",() => 
     status:500,
     stack:"...stacktraces here"});
   it("init",async () => {
-    c = masterConfig("OBA_CORE");
+    c = coreConfig("OBA_CORE");
     core = new OBACoreApi({logger:{...c.logger,dirname:path.join(__dirname,"/../../../logs")}});
     J.is(core);
     J.true(core.logger);

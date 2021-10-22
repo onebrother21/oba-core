@@ -42,8 +42,8 @@ const ob = __importStar(require("@onebro/oba-common"));
 mongoose_1.default.Promise = bluebird_1.default;
 class OBACoreDB {
     constructor(config) {
-        this.connections = {};
         this.config = config;
+        this.connections = {};
     }
     model(dbName, modelName, schema, collection) {
         return __awaiter(this, void 0, void 0, function* () {

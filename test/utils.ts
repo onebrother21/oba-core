@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import OBACoreApi,{masterConfig} from "../src";
+import OBACoreApi,{coreConfig} from "../src";
 
 export const utils = {
   sleep:(n:number) => new Promise(done => setTimeout(done,n)),
@@ -11,11 +11,11 @@ export const utils = {
   },
   init:async () => {
     try{
-      const {db,errors} = masterConfig("OBA_API");
+      const {db,errors} = coreConfig("OBA_API");
       db.connections = {onebrother:'mongodb://localhost:27017/ob1'};
-      const master:OBACoreApi<null> = new OBACoreApi({db,errors});
-      await master.db.start();
-      return {master};}
+      const core:OBACoreApi<null> = new OBACoreApi({db,errors});
+      await core.db.start();
+      return {core};}
     catch(e){console.error(e);throw e;}
   },
 };

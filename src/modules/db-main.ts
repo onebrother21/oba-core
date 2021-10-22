@@ -7,10 +7,7 @@ mongoose.Promise = bluebird;
 
 export interface OBACoreDB extends OBACoreDBType {}
 export class OBACoreDB {
-  constructor(config:OBACoreDBConfig){
-    this.connections = {};
-    this.config = config;
-  }
+  constructor(public config:OBACoreDBConfig){this.connections = {};}
   async model<T extends Document,U extends Model<T>>(dbName:string,modelName:string,schema:Schema<T>,collection: string):Promise<U> {
     const db = this.get(dbName).client;
     const model = db.model<T,U>(modelName,schema,collection);

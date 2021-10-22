@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import winston,{LogEntry,transports,format} from "winston";
-import { WinstonLogger,WinstonLoggerConfig,} from "./logger-types";
+import { WinstonLoggerType,WinstonLoggerConfig,} from "./logger-types";
 import { AppError,appLocals as locals} from "@onebro/oba-common";
 
 const {combine,label,timestamp,printf} = format;
@@ -43,4 +43,4 @@ export const makeLogger = (c:WinstonLoggerConfig) => winston.createLogger({
   format:makeFormat(c.label),
   transports:c.levels.map(l => makeTransport(l,c.dirname)),
   exitOnError:false
-}) as WinstonLogger;
+}) as WinstonLoggerType;

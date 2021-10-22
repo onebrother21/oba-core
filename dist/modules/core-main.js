@@ -43,7 +43,7 @@ class OBACoreApi {
         this.start = () => __awaiter(this, void 0, void 0, function* () { return yield this.db.start(); });
         this.config = config;
         if (config.events)
-            this.events = new emitter_main_1.OBACoreEmitter(config.events);
+            this.events = new emitter_main_1.OBACoreEmitter();
         if (config.errors)
             this.e = new error_factory_main_1.OBACoreErrorFactory(config.errors);
         if (config.vars)

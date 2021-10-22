@@ -4,6 +4,7 @@ import { OBACoreDBType, OBACoreDBConfig } from "./db-types";
 export interface OBACoreDB extends OBACoreDBType {
 }
 export declare class OBACoreDB {
+    config: OBACoreDBConfig;
     constructor(config: OBACoreDBConfig);
     model<T extends Document, U extends Model<T>>(dbName: string, modelName: string, schema: Schema<T>, collection: string): Promise<U>;
     start(): Promise<void>;

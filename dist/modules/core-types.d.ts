@@ -3,13 +3,14 @@ import { OBACoreErrorFactory, OBACoreErrorFactoryConfig } from "./error-factory-
 import { OBACoreEmitter, OBACoreEmitterConfig } from "./emitter-main";
 import { OBACoreLogger, OBACoreLoggerConfig } from "./logger-main";
 import { OBACoreDB, OBACoreDBConfig } from "./db-main";
-export declare type OBACoreConfigObj = {
+export declare type OBACoreConfigType = {
     vars: OBACoreVarsConfig;
     events: OBACoreEmitterConfig;
     logger: OBACoreLoggerConfig;
     errors: OBACoreErrorFactoryConfig;
     db: OBACoreDBConfig;
 };
+export declare type OBACoreConfig = Partial<OBACoreConfigType>;
 export declare type OBACoreObj<EV> = {
     config: OBACoreConfig;
     vars: OBACoreVars;
@@ -18,5 +19,4 @@ export declare type OBACoreObj<EV> = {
     db: OBACoreDB;
     e: OBACoreErrorFactory;
 };
-export declare type OBACoreConfig = Partial<OBACoreConfigObj>;
 export declare type OBACoreType<EV> = Partial<OBACoreObj<EV>>;

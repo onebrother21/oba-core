@@ -5,11 +5,11 @@ export declare type DBConnection = {
     client: Connection;
 };
 export declare type DBConnections = DataMap<DBConnection>;
-export interface OBACoreDBConfig {
+export declare type OBACoreDBConfig = {
     connections: Strings;
     opts: ConnectionOptions;
-}
-export interface OBACoreDBType {
+};
+export declare type OBACoreDBType = {
     connections: DBConnections;
     config: OBACoreDBConfig;
-}
+};

@@ -11,7 +11,7 @@ export class OBACoreApi<EV> {
   start = async():Promise<void> => await this.db.start();
   constructor(config:OBACoreConfig) {
     this.config = config;
-    if(config.events) this.events = new OBACoreEmitter<EV>(config.events);
+    if(config.events) this.events = new OBACoreEmitter<EV>();
     if(config.errors) this.e = new OBACoreErrorFactory(config.errors);
     if(config.vars) this.vars = new OBACoreVars(config.vars);
     if(config.logger) this.logger = new OBACoreLogger(config.logger);

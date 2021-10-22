@@ -10,7 +10,7 @@ export class OBACoreEmitter<T> {
   get listeners(){return this._emitter.eventNames();}
   print<k extends keyof this>(s?:k){ob.info(s?({[s]:this[s]}):this);}
   get<k extends Keys<T>>(name?:k){return name?this._values[name]:this.values;}
-  constructor(config:OBACoreEmitterConfig){
+  constructor(){
     this._history = [];
     this._values = {shutdown:false} as any;
     this._emitter = new EventEmitter();
@@ -18,10 +18,10 @@ export class OBACoreEmitter<T> {
     this.emit = (s,v) => {
       this._history.unshift({event:{[s]:v} as any,time:new Date()});
       this._values[s] = v;
-      this._emitter.emit(s as string,v);};
-    process.on("SIGUSR2",() => ob.warn("SIGUSR2") && this.emit("shutdown" as any,true));
-    process.on("SIGINT",() => ob.warn("SIGINT") && this.emit("shutdown" as any,true));
-    process.on("SIGTERM",() => ob.warn("SIGTERM") && this.emit("shutdown" as any,true));
-    process.on("exit",() => ob.warn("exit") && this.emit("shutdown" as any,false));}}
+      this._emitter.emit(s as string,v);
+    };
+    for(const i of ["SIGUSR2","SIGINT","SIGTERM","exit"]) process.on(i,() => ob.warn(i) && this.emit("shutdown" as any,true));
+  }
+}
 export default OBACoreEmitter;
 export * from "./emitter-types";

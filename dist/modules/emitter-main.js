@@ -31,7 +31,7 @@ class OBACoreEmitter {
     get listeners() { return this._emitter.eventNames(); }
     print(s) { ob.info(s ? ({ [s]: this[s] }) : this); }
     get(name) { return name ? this._values[name] : this.values; }
-    constructor(config) {
+    constructor() {
         this._history = [];
         this._values = { shutdown: false };
         this._emitter = new events_1.EventEmitter();
@@ -41,10 +41,8 @@ class OBACoreEmitter {
             this._values[s] = v;
             this._emitter.emit(s, v);
         };
-        process.on("SIGUSR2", () => ob.warn("SIGUSR2") && this.emit("shutdown", true));
-        process.on("SIGINT", () => ob.warn("SIGINT") && this.emit("shutdown", true));
-        process.on("SIGTERM", () => ob.warn("SIGTERM") && this.emit("shutdown", true));
-        process.on("exit", () => ob.warn("exit") && this.emit("shutdown", false));
+        for (const i of ["SIGUSR2", "SIGINT", "SIGTERM", "exit"])
+            process.on(i, () => ob.warn(i) && this.emit("shutdown", true));
     }
 }
 exports.OBACoreEmitter = OBACoreEmitter;
