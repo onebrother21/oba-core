@@ -1,6 +1,5 @@
-import {MongoError} from "mongodb";
-import {Errors,Methods,AppError} from "@onebro/oba-common";
-import * as ob from "@onebro/oba-common";
+import {MongoServerError} from "mongodb";
+import OBA,{AppError} from "@onebro/oba-common";
 import { OBACoreErrorFactoryType, OBACoreErrorFactoryConfig } from "./error-factory-types";
 
 export interface OBACoreErrorFactory extends OBACoreErrorFactoryType {}
@@ -12,8 +11,8 @@ export class OBACoreErrorFactory {
   make(e:AppError,k:string,status:number,data:string):AppError;
   make(e:AppError,k:string,status?:string|number,data?:string):AppError{
     const errCode = k.toLocaleUpperCase();
-    const errStatus = ob.num(status)?status:e.status;
-    const errData = ob.str(status)?status:data;
+    const errStatus = OBA.num(status)?status:e.status;
+    const errData = OBA.str(status)?status:data;
     const errMsg = errData?e.message.replace("%s",errData):e.message;
     const modified = Object.assign({},e,{
       status:errStatus,
@@ -23,13 +22,13 @@ export class OBACoreErrorFactory {
   map(e:Error|AppError):AppError {
     const mapError = (e:Error) => {
       switch(true){
-        case ob.match(/authorized/i,e.name,e.message):return this.unauthorized("user");
-        case ob.match(/jsonwebtoken/i,e.name,e.message):return this.unauthorized("user");
-        case ob.match(/jwt/i,e.name,e.message):return this.unauthorized("user");
-        case ob.match(/csrf/i,e.name,e.message):return this.csrf();
-        case ob.match(/cast/i,e.name,e.message):return this.castError();
-        case ob.match(/validation/i,e.name,e.message):return this.validation();
-        case e instanceof MongoError || ob.match(/mongo/i,e.name,e.message):return this.format<MongoError>(e as MongoError);
+        case OBA.match(/authorized/i,e.name,e.message):
+        case OBA.match(/jsonwebtoken/i,e.name,e.message):
+        case OBA.match(/jwt/i,e.name,e.message):return this.unauthorized("user");
+        case OBA.match(/csrf/i,e.name,e.message):return this.csrf();
+        case OBA.match(/cast/i,e.name,e.message):return this.castError();
+        case OBA.match(/validation/i,e.name,e.message):return this.validation();
+        case e instanceof MongoServerError || OBA.match(/mongo/i,e.name,e.message):return this.format<MongoServerError>(e as MongoServerError);
         default:return this.someError();}};
     const errTemplate = mapError(e);
     const errObj = {...errTemplate.json(),info:e.message,stack:e.stack};

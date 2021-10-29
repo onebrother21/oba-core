@@ -6,12 +6,12 @@ export const utils = {
   clear:() => process.stdout.write("\x1Bc"),
   desc:describe,
   refreshDb:async () => {
-    const db = await mongoose.createConnection("mongodb://localhost:27017/ob1",{useNewUrlParser:true,useUnifiedTopology:true});
+    const db = await mongoose.createConnection("mongodb://localhost:27017/ob1").asPromise();
     await db.dropDatabase();
   },
-  init:async () => {
+  init:async (s:string) => {
     try{
-      const {db,errors} = coreConfig("OBA_API");
+      const {db,errors} = coreConfig(s);
       db.connections = {onebrother:'mongodb://localhost:27017/ob1'};
       const core:OBACoreApi<null> = new OBACoreApi({db,errors});
       await core.db.start();

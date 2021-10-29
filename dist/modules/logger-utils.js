@@ -29,7 +29,7 @@ const winston_1 = __importStar(require("winston"));
 const oba_common_1 = require("@onebro/oba-common");
 const { combine, label, timestamp, printf } = winston_1.format;
 exports.levels = { crit: 0, error: 1, warn: 2, info: 3, access: 4, debug: 5 };
-const levelGuard = (level) => winston_1.format(info => info.level === level ? info : null)();
+const levelGuard = (level) => (0, winston_1.format)(info => info.level === level ? info : null)();
 exports.levelGuard = levelGuard;
 const printMsg = (m) => `${m.timestamp} [${m.label}] ${m.level}:${m.message}`;
 exports.printMsg = printMsg;
@@ -38,7 +38,7 @@ exports.makeFormat = makeFormat;
 const makeDir = (path) => fs_1.default.existsSync(path) || fs_1.default.mkdirSync(path);
 exports.makeDir = makeDir;
 const makeTransport = (level, dirname) => new (winston_1.transports.File)({
-    format: exports.levelGuard(level),
+    format: (0, exports.levelGuard)(level),
     filename: path_1.default.join(dirname, `/${level}.log`),
     level,
     handleExceptions: level == "error" || level == "critical"
@@ -70,8 +70,8 @@ exports.makeLogMsg = makeLogMsg;
 //create access msg
 const makeLogger = (c) => winston_1.default.createLogger({
     levels: exports.levels,
-    format: exports.makeFormat(c.label),
-    transports: c.levels.map(l => exports.makeTransport(l, c.dirname)),
+    format: (0, exports.makeFormat)(c.label),
+    transports: c.levels.map(l => (0, exports.makeTransport)(l, c.dirname)),
     exitOnError: false
 });
 exports.makeLogger = makeLogger;

@@ -1,3 +1,3 @@
 import { OBACoreConfig } from "./core-main";
-declare const setDefaultConfigWithEnvironment: (envPrefix: string) => OBACoreConfig;
+declare const setDefaultConfigWithEnvironment: (prefix: string) => OBACoreConfig;
 export { setDefaultConfigWithEnvironment as coreConfig };

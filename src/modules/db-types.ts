@@ -1,7 +1,10 @@
-import {Connection,ConnectionOptions} from "mongoose";
-import {DataMap,Strings} from "@onebro/oba-common";
+import {Connection} from "mongoose";
+import {Enum,Strings} from "@onebro/oba-common";
 
+export type DBConnectionOpts = {"autoIndex":boolean;} & Enum<number,undefined,"maxPoolSize"|"serverSelectionTimeoutMS"|"socketTimeoutMS"|"family">;
 export type DBConnection = {uri:string;client:Connection;};
-export type DBConnections = DataMap<DBConnection>;
-export type OBACoreDBConfig = {connections:Strings;opts:ConnectionOptions;};
+export type DBConnections = Enum<DBConnection>;
+
+
+export type OBACoreDBConfig = {connections:Strings;opts:DBConnectionOpts;};
 export type OBACoreDBType = {connections:DBConnections;config:OBACoreDBConfig;};

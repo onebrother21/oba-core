@@ -75,10 +75,8 @@ export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
       J.is(m.value,5)},1E9);
     it(`remove many`,async () => {
       const removed = await model.deleteMany({name:/J/});
-      console.log({removed:!!removed.ok,ct:removed.n});
-      J.is(removed);
-      J.is(removed.n,2);
-      //console.log({removed:!!removed.ok,ct:removed.n});
+      console.log({removed});
+      J.is(removed.deletedCount,2);
     },1E9);
     //it(`db/mongoose shutdown on exit`,async () => events.send({shutdown:0}));
   });

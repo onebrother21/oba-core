@@ -6,18 +6,6 @@ var __createBinding = (this && this.__createBinding) || (Object.create ? (functi
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
@@ -38,7 +26,7 @@ exports.OBACoreDB = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const mongodb_1 = require("mongodb");
 const bluebird_1 = __importDefault(require("bluebird"));
-const ob = __importStar(require("@onebro/oba-common"));
+const oba_common_1 = __importDefault(require("@onebro/oba-common"));
 mongoose_1.default.Promise = bluebird_1.default;
 class OBACoreDB {
     constructor(config) {
@@ -57,15 +45,15 @@ class OBACoreDB {
         return __awaiter(this, void 0, void 0, function* () {
             const { connections, opts } = this.config;
             const start = (name, uri, opts) => __awaiter(this, void 0, void 0, function* () {
-                ob.trace(`Attempting to connect @ ${uri}`);
+                oba_common_1.default.trace(`Attempting to connect @ ${uri}`);
                 try {
-                    const newConnection = yield mongoose_1.default.createConnection(uri, opts);
+                    const newConnection = yield mongoose_1.default.createConnection(uri, opts).asPromise();
                     const connection = { uri, client: newConnection };
                     this.connections[name] = connection;
-                    ob.ok(`MongoDB connected -> ${name.toLocaleUpperCase()}`);
+                    oba_common_1.default.ok(`MongoDB connected -> ${name.toLocaleUpperCase()}`);
                 }
                 catch (e) {
-                    ob.warn(`MongoDB connection failed -> ${e.message || e}`);
+                    oba_common_1.default.warn(`MongoDB connection failed -> ${e.message || e}`);
                     this.connections[name] = null;
                 }
             });
@@ -85,7 +73,7 @@ class OBACoreDB {
                 return connection.db(name);
             }
             catch (e) {
-                ob.error(`DB Error: ${e}`);
+                oba_common_1.default.error(`DB Error: ${e}`);
             }
         });
     }

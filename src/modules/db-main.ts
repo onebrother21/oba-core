@@ -1,8 +1,8 @@
-import mongoose,{ConnectionOptions,Document,Model,Schema} from "mongoose";
+import mongoose,{Document,Model,Schema} from "mongoose";
 import {MongoClient,MongoClientOptions} from "mongodb";
 import bluebird from "bluebird";
-import {OBACoreDBType,OBACoreDBConfig} from "./db-types";
-import * as ob from "@onebro/oba-common";
+import {OBACoreDBType,OBACoreDBConfig,DBConnectionOpts} from "./db-types";
+import OBA from "@onebro/oba-common";
 mongoose.Promise = bluebird;
 
 export interface OBACoreDB extends OBACoreDBType {}
@@ -16,16 +16,16 @@ export class OBACoreDB {
   }
   async start(){
     const {connections,opts} = this.config;
-    const start = async (name:string,uri:string,opts:ConnectionOptions) => {
-      ob.trace(`Attempting to connect @ ${uri}`);
+    const start = async (name:string,uri:string,opts:DBConnectionOpts) => {
+      OBA.trace(`Attempting to connect @ ${uri}`);
       try{
-        const newConnection = await mongoose.createConnection(uri,opts);
+        const newConnection = await mongoose.createConnection(uri,opts).asPromise();
         const connection = {uri,client:newConnection};
         this.connections[name] = connection;
-        ob.ok(`MongoDB connected -> ${name.toLocaleUpperCase()}`);
+        OBA.ok(`MongoDB connected -> ${name.toLocaleUpperCase()}`);
       }
       catch(e){
-        ob.warn(`MongoDB connection failed -> ${e.message||e}`);
+        OBA.warn(`MongoDB connection failed -> ${e.message||e}`);
         this.connections[name] = null;
       }
     };
@@ -35,7 +35,7 @@ export class OBACoreDB {
     try{
       const connection = await MongoClient.connect(uri,opts);
       return connection.db(name);}
-    catch(e){ob.error(`DB Error: ${e}`);}}
+    catch(e){OBA.error(`DB Error: ${e}`);}}
   print(){ob.info(this);}
   get(db:string){return this.connections[db];}
 }

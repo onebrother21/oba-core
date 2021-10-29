@@ -24,14 +24,13 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OBACoreErrorFactory = void 0;
 const mongodb_1 = require("mongodb");
-const oba_common_1 = require("@onebro/oba-common");
-const ob = __importStar(require("@onebro/oba-common"));
+const oba_common_1 = __importStar(require("@onebro/oba-common"));
 class OBACoreErrorFactory {
     format(e) { return new oba_common_1.AppError(e); }
     make(e, k, status, data) {
         const errCode = k.toLocaleUpperCase();
-        const errStatus = ob.num(status) ? status : e.status;
-        const errData = ob.str(status) ? status : data;
+        const errStatus = oba_common_1.default.num(status) ? status : e.status;
+        const errData = oba_common_1.default.str(status) ? status : data;
         const errMsg = errData ? e.message.replace("%s", errData) : e.message;
         const modified = Object.assign({}, e, {
             status: errStatus,
@@ -43,13 +42,13 @@ class OBACoreErrorFactory {
     map(e) {
         const mapError = (e) => {
             switch (true) {
-                case ob.match(/authorized/i, e.name, e.message): return this.unauthorized("user");
-                case ob.match(/jsonwebtoken/i, e.name, e.message): return this.unauthorized("user");
-                case ob.match(/jwt/i, e.name, e.message): return this.unauthorized("user");
-                case ob.match(/csrf/i, e.name, e.message): return this.csrf();
-                case ob.match(/cast/i, e.name, e.message): return this.castError();
-                case ob.match(/validation/i, e.name, e.message): return this.validation();
-                case e instanceof mongodb_1.MongoError || ob.match(/mongo/i, e.name, e.message): return this.format(e);
+                case oba_common_1.default.match(/authorized/i, e.name, e.message):
+                case oba_common_1.default.match(/jsonwebtoken/i, e.name, e.message):
+                case oba_common_1.default.match(/jwt/i, e.name, e.message): return this.unauthorized("user");
+                case oba_common_1.default.match(/csrf/i, e.name, e.message): return this.csrf();
+                case oba_common_1.default.match(/cast/i, e.name, e.message): return this.castError();
+                case oba_common_1.default.match(/validation/i, e.name, e.message): return this.validation();
+                case e instanceof mongodb_1.MongoServerError || oba_common_1.default.match(/mongo/i, e.name, e.message): return this.format(e);
                 default: return this.someError();
             }
         };

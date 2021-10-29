@@ -1,9 +1,9 @@
-import { AppError } from "@onebro/oba-common";
+import OBA, { AppError } from "@onebro/oba-common";
 import { OBACoreErrorFactoryType, OBACoreErrorFactoryConfig } from "./error-factory-types";
 export interface OBACoreErrorFactory extends OBACoreErrorFactoryType {
 }
 export declare class OBACoreErrorFactory {
-    format<T>(e: T): AppError;
+    format<T>(e: T): OBA.AppError;
     make(e: AppError, k: string): AppError;
     make(e: AppError, k: string, status: number): AppError;
     make(e: AppError, k: string, data: string): AppError;

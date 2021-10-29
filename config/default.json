@@ -32,12 +32,8 @@
     "logger":{"levels":["access","info","warn","error"]},
     "db":{
       "opts":{
-        "useNewUrlParser":true,
-        "useCreateIndex":true,
-        "useUnifiedTopology":true,
-        "useFindAndModify":false,
         "autoIndex":true,
-        "poolSize":10,
+        "maxPoolSize":10,
         "serverSelectionTimeoutMS":5000,
         "socketTimeoutMS":45000,
         "family":4},
