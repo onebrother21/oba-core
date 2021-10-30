@@ -47,9 +47,8 @@ class OBACoreDB {
             const start = (name, uri, opts) => __awaiter(this, void 0, void 0, function* () {
                 oba_common_1.default.trace(`Attempting to connect @ ${uri}`);
                 try {
-                    const newConnection = yield mongoose_1.default.createConnection(uri, opts).asPromise();
-                    const connection = { uri, client: newConnection };
-                    this.connections[name] = connection;
+                    const connection = yield mongoose_1.default.createConnection(uri, opts).asPromise();
+                    this.connections[name] = { uri, client: connection };
                     oba_common_1.default.ok(`MongoDB connected -> ${name.toLocaleUpperCase()}`);
                 }
                 catch (e) {

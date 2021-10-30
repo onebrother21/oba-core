@@ -43,8 +43,10 @@ class OBACoreApi {
             this.logger = new logger_main_1.OBACoreLogger(config.logger);
         if (config.db)
             this.db = new db_main_1.OBACoreDB(config.db);
-        if (config.vars && config.vars.verbose)
-            oba_common_1.default.ok(this.vars.name, " Running @...", Date.now());
+        if (this.events)
+            this.events.on("init", () => oba_common_1.default.ok(this.vars.name, " Running @...", Date.now()));
+        if (this.vars && this.vars.verbose)
+            this.events.emit("init", true);
     }
 }
 exports.OBACoreApi = OBACoreApi;

@@ -19,9 +19,8 @@ export class OBACoreDB {
     const start = async (name:string,uri:string,opts:DBConnectionOpts) => {
       OBA.trace(`Attempting to connect @ ${uri}`);
       try{
-        const newConnection = await mongoose.createConnection(uri,opts).asPromise();
-        const connection = {uri,client:newConnection};
-        this.connections[name] = connection;
+        const connection = await mongoose.createConnection(uri,opts).asPromise();
+        this.connections[name] = {uri,client:connection};
         OBA.ok(`MongoDB connected -> ${name.toLocaleUpperCase()}`);
       }
       catch(e){

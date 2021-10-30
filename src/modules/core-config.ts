@@ -6,13 +6,13 @@ const setDefaultConfigWithEnvironment = (prefix:string):OBACoreConfig => {
   const env = process.env.NODE_ENV.toLocaleUpperCase();
   const name = OBA.envvar(prefix,"_NAME");
   const mode = OBA.envvar(prefix,"_MODE");
-  let uri = "_MONGODB";
+  let dburi = "_MONGODB";
   switch(true){
     case env === "production":
-    case (/live-db/.test(env)):uri += "_PROD";break;
-    default:uri += "_LOCAL";break;
+    case (/live-db/i.test(env)):dburi += "_PROD";break;
+    default:dburi += "_LOCAL";break;
   }
-  const dbs =  {[name]:OBA.envvar(prefix,uri)};
+  const dbs =  {[name]:OBA.envvar(prefix,dburi)};
   const initial:OBACoreConfig = config.get("appconfig");
   const atRuntime:DeepPartial<OBACoreConfig> = {
     vars:{name,env,mode,verbose:false},

@@ -10,17 +10,17 @@ const setDefaultConfigWithEnvironment = (prefix) => {
     const env = process.env.NODE_ENV.toLocaleUpperCase();
     const name = oba_common_1.default.envvar(prefix, "_NAME");
     const mode = oba_common_1.default.envvar(prefix, "_MODE");
-    let uri = "_MONGODB";
+    let dburi = "_MONGODB";
     switch (true) {
         case env === "production":
-        case (/live-db/.test(env)):
-            uri += "_PROD";
+        case (/live-db/i.test(env)):
+            dburi += "_PROD";
             break;
         default:
-            uri += "_LOCAL";
+            dburi += "_LOCAL";
             break;
     }
-    const dbs = { [name]: oba_common_1.default.envvar(prefix, uri) };
+    const dbs = { [name]: oba_common_1.default.envvar(prefix, dburi) };
     const initial = config_1.default.get("appconfig");
     const atRuntime = {
         vars: { name, env, mode, verbose: false },

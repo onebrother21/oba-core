@@ -18,22 +18,26 @@ export class OBACoreErrorFactory {
       status:errStatus,
       code:errCode,
       message:errMsg});
-    return new AppError(modified);}
+    return new AppError(modified);
+  }
+  mapKnownError(e:Error){
+    switch(true){
+      case OBA.match(/authorized/i,e.name,e.message):
+      case OBA.match(/jsonwebtoken/i,e.name,e.message):
+      case OBA.match(/jwt/i,e.name,e.message):return this.unauthorized("user");
+      case OBA.match(/csrf/i,e.name,e.message):return this.csrf();
+      case OBA.match(/cast/i,e.name,e.message):return this.castError();
+      case OBA.match(/validation/i,e.name,e.message):return this.validation();
+      case e instanceof MongoServerError || OBA.match(/mongo/i,e.name,e.message):return this.format<MongoServerError>(e as MongoServerError);
+      default:return this.someError();
+    }
+  }
   map(e:Error|AppError):AppError {
-    const mapError = (e:Error) => {
-      switch(true){
-        case OBA.match(/authorized/i,e.name,e.message):
-        case OBA.match(/jsonwebtoken/i,e.name,e.message):
-        case OBA.match(/jwt/i,e.name,e.message):return this.unauthorized("user");
-        case OBA.match(/csrf/i,e.name,e.message):return this.csrf();
-        case OBA.match(/cast/i,e.name,e.message):return this.castError();
-        case OBA.match(/validation/i,e.name,e.message):return this.validation();
-        case e instanceof MongoServerError || OBA.match(/mongo/i,e.name,e.message):return this.format<MongoServerError>(e as MongoServerError);
-        default:return this.someError();}};
-    const errTemplate = mapError(e);
+    const errTemplate = this.mapKnownError(e);
     const errObj = {...errTemplate.json(),info:e.message,stack:e.stack};
     errObj.status = (e as AppError).status||errObj.status;
-    return new AppError(errObj);}
+    return new AppError(errObj);
+  }
   constructor(config:OBACoreErrorFactoryConfig){for(const k in config) this[k] = this.make.bind(null,config[k],k);}
 }
 export default OBACoreErrorFactory;

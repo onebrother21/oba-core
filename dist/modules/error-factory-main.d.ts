@@ -8,6 +8,7 @@ export declare class OBACoreErrorFactory {
     make(e: AppError, k: string, status: number): AppError;
     make(e: AppError, k: string, data: string): AppError;
     make(e: AppError, k: string, status: number, data: string): AppError;
+    mapKnownError(e: Error): OBA.AppError;
     map(e: Error | AppError): AppError;
     constructor(config: OBACoreErrorFactoryConfig);
 }

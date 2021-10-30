@@ -1,8 +1,8 @@
-import { OBACoreEmitterType,OBACoreEmitterConfig } from "./emitter-types";
-import OBA,{Keys}from "@onebro/oba-common";
+import OBA,{Keys,Enum, AnyArr}from "@onebro/oba-common";
 import { EventEmitter } from "events";
+import { OBACoreEmitterType } from "./emitter-types";
 
-export interface OBACoreEmitter<T> extends OBACoreEmitterType<T & {"shutdown":boolean}> {}
+export interface OBACoreEmitter<T> extends OBACoreEmitterType<T & Enum<boolean,"init"|"shutdown">> {}
 export class OBACoreEmitter<T> {
   get history(){return this._history;}
   get values(){return this._values;}
@@ -15,11 +15,11 @@ export class OBACoreEmitter<T> {
     this._emitter = new EventEmitter();
     this.on = (s,l) => this._emitter.on(s as string,l);
     this.emit = (s,v) => {
-      this._history.unshift({event:{[s]:v} as any,time:new Date()});
+      this._history.unshift({event:s,time:new Date()});
       this._values[s] = v;
       this._emitter.emit(s as string,v);
     };
-    for(const i of ["SIGUSR2","SIGINT","SIGTERM","exit"]) process.on(i,() => OBA.warn(i) && this.emit("shutdown" as any,true));
+    for(const i of ["SIGUSR2","SIGINT","SIGTERM","exit"]) process.on(i,() => OBA.warn("SYSTEM TERMINATING ::",i) && this.emit("shutdown",true as any));
   }
 }
 export default OBACoreEmitter;

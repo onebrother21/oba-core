@@ -39,20 +39,20 @@ class OBACoreErrorFactory {
         });
         return new oba_common_1.AppError(modified);
     }
+    mapKnownError(e) {
+        switch (true) {
+            case oba_common_1.default.match(/authorized/i, e.name, e.message):
+            case oba_common_1.default.match(/jsonwebtoken/i, e.name, e.message):
+            case oba_common_1.default.match(/jwt/i, e.name, e.message): return this.unauthorized("user");
+            case oba_common_1.default.match(/csrf/i, e.name, e.message): return this.csrf();
+            case oba_common_1.default.match(/cast/i, e.name, e.message): return this.castError();
+            case oba_common_1.default.match(/validation/i, e.name, e.message): return this.validation();
+            case e instanceof mongodb_1.MongoServerError || oba_common_1.default.match(/mongo/i, e.name, e.message): return this.format(e);
+            default: return this.someError();
+        }
+    }
     map(e) {
-        const mapError = (e) => {
-            switch (true) {
-                case oba_common_1.default.match(/authorized/i, e.name, e.message):
-                case oba_common_1.default.match(/jsonwebtoken/i, e.name, e.message):
-                case oba_common_1.default.match(/jwt/i, e.name, e.message): return this.unauthorized("user");
-                case oba_common_1.default.match(/csrf/i, e.name, e.message): return this.csrf();
-                case oba_common_1.default.match(/cast/i, e.name, e.message): return this.castError();
-                case oba_common_1.default.match(/validation/i, e.name, e.message): return this.validation();
-                case e instanceof mongodb_1.MongoServerError || oba_common_1.default.match(/mongo/i, e.name, e.message): return this.format(e);
-                default: return this.someError();
-            }
-        };
-        const errTemplate = mapError(e);
+        const errTemplate = this.mapKnownError(e);
         const errObj = Object.assign(Object.assign({}, errTemplate.json()), { info: e.message, stack: e.stack });
         errObj.status = e.status || errObj.status;
         return new oba_common_1.AppError(errObj);

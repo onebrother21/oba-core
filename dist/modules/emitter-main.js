@@ -28,12 +28,12 @@ class OBACoreEmitter {
         this._emitter = new events_1.EventEmitter();
         this.on = (s, l) => this._emitter.on(s, l);
         this.emit = (s, v) => {
-            this._history.unshift({ event: { [s]: v }, time: new Date() });
+            this._history.unshift({ event: s, time: new Date() });
             this._values[s] = v;
             this._emitter.emit(s, v);
         };
         for (const i of ["SIGUSR2", "SIGINT", "SIGTERM", "exit"])
-            process.on(i, () => oba_common_1.default.warn(i) && this.emit("shutdown", true));
+            process.on(i, () => oba_common_1.default.warn("SYSTEM TERMINATING ::", i) && this.emit("shutdown", true));
     }
 }
 exports.OBACoreEmitter = OBACoreEmitter;
