@@ -18,9 +18,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OBACoreApi = void 0;
 const vars_main_1 = require("./vars-main");
@@ -28,7 +25,6 @@ const error_factory_main_1 = require("./error-factory-main");
 const emitter_main_1 = require("./emitter-main");
 const logger_main_1 = require("./logger-main");
 const db_main_1 = require("./db-main");
-const oba_common_1 = __importDefault(require("@onebro/oba-common"));
 class OBACoreApi {
     constructor(config) {
         this.start = () => __awaiter(this, void 0, void 0, function* () { return yield this.db.start(); });
@@ -51,14 +47,6 @@ class OBACoreApi {
                 default: break;
             }
         }
-        if (this.events) {
-            const badsignals = ["SIGUSR2", "SIGINT", "SIGTERM", "exit"];
-            for (const i of badsignals)
-                process.on(i, () => oba_common_1.default.warn("SYSTEM TERMINATING ::", i) && this.events.emit("shutdown", true));
-            this.events.on("init", () => oba_common_1.default.ok(this.vars.name, " Running @...", Date.now()));
-        }
-        if (this.vars && this.vars.verbose)
-            this.events.emit("init", true);
     }
 }
 exports.OBACoreApi = OBACoreApi;

@@ -1,15 +1,15 @@
 /// <reference types="node" />
 import { EventEmitter } from "events";
 import { Keys, Callback } from "@onebro/oba-common";
-export declare type OBACoreEmitterCallback<T> = Callback<T>;
+export declare type OBACoreEmitterCallback<EV> = Callback<EV>;
 export declare type OBACoreEmitterConfig = {};
-export declare type OBACoreEmitterType<T> = {
+export declare type OBACoreEmitterType<EV> = {
     _emitter: EventEmitter;
     _history: {
-        event: Keys<T>;
+        event: Keys<EV>;
         time: Date;
     }[];
-    _values: Partial<T>;
-    on<k extends Keys<T>>(s: k, l: OBACoreEmitterCallback<T[k]>): void;
-    emit<k extends Keys<T>>(s: k, v: T[k]): void;
+    _values: Partial<EV>;
+    on<k extends Keys<EV>>(s: k, l: OBACoreEmitterCallback<EV[k]>): void;
+    emit<k extends Keys<EV>>(s: k, v: EV[k]): void;
 };

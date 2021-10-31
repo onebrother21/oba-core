@@ -4,9 +4,7 @@ import {OBACoreApi,OBACoreConfig,coreConfig} from "../../../src";
 
 export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
   let core:OBACoreApi<null>,
-  c:OBACoreConfig,
   cName = "OBA_CORE",
-  db:OBACoreApi<null>["db"],
   dbName:string = "OBACoreApi",
   model:any,id:any;
   const schema = new Schema({
@@ -17,20 +15,19 @@ export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
   schema.virtual("other").get(function(){return this.name + "OtherShit"});
   J.utils.desc("DB",() => {
     it("init",async () => {
-      c = coreConfig(cName);
-      core = new OBACoreApi({db:c.db});
+      const {db} = coreConfig(cName);
+      core = new OBACoreApi({db});
       J.is(core);
       J.true(core.db);
-      db = core.db;
     },1E9);
     it(`has connections`,async () => {
-      await db.start();
-      console.log(db);
-      J.true(db.get(dbName));
+      await core.db.start();
+      console.log(core.db);
+      J.true(core.db.get(dbName));
     },1E9);
     it(`has "model" method`,async () => {
-      model = await db.model(dbName,"TestModel",schema,"testmodels");
-      J.prop(db.get(dbName).client.models,"TestModel");
+      model = await core.db.model(dbName,"TestModel",schema,"testmodels");
+      J.prop(core.db.get(dbName).client.models,"TestModel");
     },1E9);
   });
   J.utils.desc("Mongoose Conn",() => {
@@ -78,6 +75,6 @@ export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
       console.log({removed});
       J.is(removed.deletedCount,2);
     },1E9);
-    //it(`db/mongoose shutdown on exit`,async () => events.send({shutdown:0}));
+    //it(`core.db/mongoose shutdown on exit`,async () => events.send({shutdown:0}));
   });
 });
