@@ -33,18 +33,30 @@ class OBACoreApi {
     constructor(config) {
         this.start = () => __awaiter(this, void 0, void 0, function* () { return yield this.db.start(); });
         this.config = config;
-        if (config.events)
-            this.events = new emitter_main_1.OBACoreEmitter();
-        if (config.errors)
-            this.e = new error_factory_main_1.OBACoreErrorFactory(config.errors);
-        if (config.vars)
-            this.vars = new vars_main_1.OBACoreVars(config.vars);
-        if (config.logger)
-            this.logger = new logger_main_1.OBACoreLogger(config.logger);
-        if (config.db)
-            this.db = new db_main_1.OBACoreDB(config.db);
-        if (this.events)
+        for (const k in this.config) {
+            switch (k) {
+                case "vars": this.vars = new vars_main_1.OBACoreVars(config.vars);
+                case "events":
+                    this.events = new emitter_main_1.OBACoreEmitter();
+                    break;
+                case "errors":
+                    this.e = new error_factory_main_1.OBACoreErrorFactory(config.errors);
+                    break;
+                case "logger":
+                    this.logger = new logger_main_1.OBACoreLogger(config.logger);
+                    break;
+                case "db":
+                    this.db = new db_main_1.OBACoreDB(config.db);
+                    break;
+                default: break;
+            }
+        }
+        if (this.events) {
+            const badsignals = ["SIGUSR2", "SIGINT", "SIGTERM", "exit"];
+            for (const i of badsignals)
+                process.on(i, () => oba_common_1.default.warn("SYSTEM TERMINATING ::", i) && this.events.emit("shutdown", true));
             this.events.on("init", () => oba_common_1.default.ok(this.vars.name, " Running @...", Date.now()));
+        }
         if (this.vars && this.vars.verbose)
             this.events.emit("init", true);
     }

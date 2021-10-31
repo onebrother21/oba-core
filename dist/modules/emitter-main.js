@@ -32,8 +32,6 @@ class OBACoreEmitter {
             this._values[s] = v;
             this._emitter.emit(s, v);
         };
-        for (const i of ["SIGUSR2", "SIGINT", "SIGTERM", "exit"])
-            process.on(i, () => oba_common_1.default.warn("SYSTEM TERMINATING ::", i) && this.emit("shutdown", true));
     }
 }
 exports.OBACoreEmitter = OBACoreEmitter;

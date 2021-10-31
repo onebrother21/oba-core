@@ -1,5 +1,7 @@
 import { OBACoreType, OBACoreConfig } from "./core-types";
-export interface OBACoreApi<EV> extends OBACoreType<EV> {
+import { Enum } from "@onebro/oba-common";
+export declare type OBACoreEvents<EV> = EV & Enum<boolean, "init" | "shutdown">;
+export interface OBACoreApi<EV> extends OBACoreType<OBACoreEvents<EV>> {
 }
 export declare class OBACoreApi<EV> {
     start: () => Promise<void>;
