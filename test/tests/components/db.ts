@@ -16,6 +16,7 @@ export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
       const {db,vars} = coreConfig("OBA_CORE");
       c = {db,vars};
       core = new OBACoreApi(c);
+      core.init();
       J.is(core);
       J.true(core.db);
     },1E9);

@@ -27,6 +27,7 @@ export const obaCoreLoggerInitTests = () => J.utils.desc("AM Logger Init",() => 
     logger.dirname = path.join(__dirname,"/../../../logs");
     c = {logger};
     core = new OBACoreApi(c);
+    core.init();
     J.is(core);
     J.true(core.logger);
   });
@@ -53,8 +54,8 @@ export const obaCoreLoggerInitTests = () => J.utils.desc("AM Logger Init",() => 
         throw e;}
       else{
         J.is(results);
-        console.log(logQuery);
-        console.log(results);
+        console.log({logQuery});
+        console.log({results});
       }
       done();
     };

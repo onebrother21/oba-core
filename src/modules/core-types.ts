@@ -8,6 +8,7 @@ export type OBACoreConfigType<Ev> = {
   vars:OBACoreVarsConfig;
   events:OBACoreEmitterConfig<Ev>;
   logger:OBACoreLoggerConfig;
+  e:OBACoreErrorFactoryConfig;
   errors:OBACoreErrorFactoryConfig;
   db:OBACoreDBConfig;
 };
@@ -19,5 +20,6 @@ export type OBACoreObj<Ev> = {
   logger:OBACoreLogger;
   db:OBACoreDB;
   e:OBACoreErrorFactory;
+  errors:OBACoreErrorFactory;
 };
 export type OBACoreType<Ev> = Partial<OBACoreObj<Ev>>;

@@ -7,6 +7,7 @@ export const obaCoreErrorFactoryInitTests = () => J.utils.desc("AM Errors Init",
     const {errors} = coreConfig("OBA_CORE");
     c = {errors};
     core = new OBACoreApi(c);
+    core.init();
     J.is(core);
     J.true(core.e);
     });

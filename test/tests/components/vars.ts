@@ -7,6 +7,7 @@ export const obaCoreVarsInitTests = () => J.utils.desc("AM Vars Init",() => {
     const {vars} = coreConfig("OBA_CORE");
     c = {vars};
     core = new OBACoreApi(c);
+    core.init();
     J.is(core);
     J.true(core.vars);
   });

@@ -12,15 +12,16 @@ export const obaCoreEmitterInitTests = () => J.utils.desc("AM Emitter Init",() =
   let core:OBACoreApi<OBACoreEvents>,c:OBACoreConfig<OBACoreEvents>;
   it("init",async () => {
     const {vars,db} = coreConfig("OBA_CORE");
-    const events:OBACoreConfig<OBACoreEvents>["events"] = {
-      "init":() => OBA.ok(core.vars.name," Running @...",Date.now()),
+    c = {vars,db};
+    core = new OBACoreApi(c);
+    core.config.events = {
+      "init":() => OBA.ok(core.vars.name," Running @...",new Date()),
       "config":b => console.log({config:b}),
       "test":b => console.log({test:b}),
       "dbOK":o => console.log(o),
       "shutdown":() => core.db.shutdown(),
     };
-    c = {events,vars,db};
-    core = new OBACoreApi(c);
+    core.init();
     J.is(core);
     J.true(core.events);
   });

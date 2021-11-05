@@ -27,18 +27,15 @@ const logger_main_1 = require("./logger-main");
 const db_main_1 = require("./db-main");
 class OBACoreApi {
     constructor(config) {
-        this.start = () => __awaiter(this, void 0, void 0, function* () { return yield this.db.start(); });
         this.config = config;
-        const components = {
-            vars: () => this.vars = new vars_main_1.OBACoreVars(this.config.vars),
-            events: () => this.events = new emitter_main_1.OBACoreEmitter(this.config.events),
-            errors: () => this.e = new error_factory_main_1.OBACoreErrorFactory(this.config.errors),
-            logger: () => this.logger = new logger_main_1.OBACoreLogger(this.config.logger),
-            db: () => this.db = new db_main_1.OBACoreDB(this.config.db),
+        this.init = () => {
+            this.config.vars ? this.vars = new vars_main_1.OBACoreVars(this.config.vars) : null;
+            this.config.events ? this.events = new emitter_main_1.OBACoreEmitter(this.config.events) : null;
+            this.config.e || this.config.errors ? this.e = new error_factory_main_1.OBACoreErrorFactory(this.config.e || this.config.errors) : null;
+            this.config.logger ? this.logger = new logger_main_1.OBACoreLogger(this.config.logger) : null;
+            this.config.db ? this.db = new db_main_1.OBACoreDB(this.config.db) : null;
         };
-        for (const k in components)
-            if (this.config[k])
-                components[k]();
+        this.start = () => __awaiter(this, void 0, void 0, function* () { return yield this.db.start(); });
     }
 }
 exports.OBACoreApi = OBACoreApi;
