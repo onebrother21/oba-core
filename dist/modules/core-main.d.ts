@@ -1,9 +1,9 @@
 import { OBACoreType, OBACoreConfig } from "./core-types";
-export interface OBACoreApi<EV> extends OBACoreType<EV> {
+export interface OBACoreApi<Ev> extends OBACoreType<Ev> {
 }
-export declare class OBACoreApi<EV> {
+export declare class OBACoreApi<Ev> {
     start: () => Promise<void>;
-    constructor(config: OBACoreConfig);
+    constructor(config: OBACoreConfig<Ev>);
 }
 export default OBACoreApi;
 export * from "./core-types";

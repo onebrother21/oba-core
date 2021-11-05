@@ -3,9 +3,7 @@ import {Schema} from "mongoose";
 import {OBACoreApi,OBACoreConfig,coreConfig} from "../../../src";
 
 export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
-  let core:OBACoreApi<null>,
-  cName = "OBA_CORE",
-  dbName:string = "OBACoreApi",
+  let core:OBACoreApi<null>,c:OBACoreConfig<null>,
   model:any,id:any;
   const schema = new Schema({
     name:{type:String,unique:true,required:true,index:true},
@@ -15,19 +13,20 @@ export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
   schema.virtual("other").get(function(){return this.name + "OtherShit"});
   J.utils.desc("DB",() => {
     it("init",async () => {
-      const {db} = coreConfig(cName);
-      core = new OBACoreApi({db});
+      const {db,vars} = coreConfig("OBA_CORE");
+      c = {db,vars};
+      core = new OBACoreApi(c);
       J.is(core);
       J.true(core.db);
     },1E9);
     it(`has connections`,async () => {
       await core.db.start();
       console.log(core.db);
-      J.true(core.db.get(dbName));
+      J.true(core.db.get(core.vars.name));
     },1E9);
     it(`has "model" method`,async () => {
-      model = await core.db.model(dbName,"TestModel",schema,"testmodels");
-      J.prop(core.db.get(dbName).client.models,"TestModel");
+      model = await core.db.model(core.vars.name,"TestModel",schema,"testmodels");
+      J.prop(core.db.get(core.vars.name).client.models,"TestModel");
     },1E9);
   });
   J.utils.desc("Mongoose Conn",() => {

@@ -22,9 +22,9 @@ class OBACoreEmitter {
     get listeners() { return this._emitter.eventNames(); }
     print(s) { oba_common_1.default.info(s ? ({ [s]: this[s] }) : this); }
     get(name) { return name ? this._values[name] : this.values; }
-    constructor() {
+    constructor(o) {
         this._history = [];
-        this._values = { shutdown: false };
+        this._values = {};
         this._emitter = new events_1.EventEmitter();
         this.on = (s, l) => this._emitter.on(s, l);
         this.emit = (s, v) => {
@@ -32,6 +32,8 @@ class OBACoreEmitter {
             this._values[s] = v;
             this._emitter.emit(s, v);
         };
+        for (const k in o)
+            this.on(k, o[k]);
     }
 }
 exports.OBACoreEmitter = OBACoreEmitter;

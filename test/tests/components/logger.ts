@@ -2,11 +2,11 @@ import {J} from "../../utils";
 import fs from "fs";
 import winston from "winston";
 import {AppError} from "@onebro/oba-common";
-import {OBACoreApi,coreConfig} from "../../../src";
+import {OBACoreApi,OBACoreConfig,coreConfig} from "../../../src";
 import path from "path";
 
 export const obaCoreLoggerInitTests = () => J.utils.desc("AM Logger Init",() => {
-  let core:OBACoreApi<null>,logmsg:string;
+  let core:OBACoreApi<null>,c:OBACoreConfig<null>,logmsg:string;
   const logQuery:winston.QueryOptions = {
     from:new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
     until:new Date(),
@@ -25,7 +25,8 @@ export const obaCoreLoggerInitTests = () => J.utils.desc("AM Logger Init",() => 
   it("init",async () => {
     const {logger} = coreConfig("OBA_CORE");
     logger.dirname = path.join(__dirname,"/../../../logs");
-    core = new OBACoreApi({logger});
+    c = {logger};
+    core = new OBACoreApi(c);
     J.is(core);
     J.true(core.logger);
   });

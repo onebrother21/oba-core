@@ -2,10 +2,11 @@ import {J} from "../../utils";
 import {OBACoreApi,OBACoreConfig,coreConfig} from "../../../src";
 
 export const obaCoreErrorFactoryInitTests = () => J.utils.desc("AM Errors Init",() => {
-  let core:OBACoreApi<null>;
+  let core:OBACoreApi<null>,c:OBACoreConfig<null>;
   it("init",async () => {
     const {errors} = coreConfig("OBA_CORE");
-    core = new OBACoreApi({errors});
+    c = {errors};
+    core = new OBACoreApi(c);
     J.is(core);
     J.true(core.e);
     });

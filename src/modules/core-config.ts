@@ -2,7 +2,7 @@ import config from "config";
 import OBA,{ DeepPartial } from "@onebro/oba-common";
 import { OBACoreConfig } from "./core-main";
 
-const setDefaultConfigWithEnvironment = (prefix:string):OBACoreConfig => {
+const setDefaultConfigWithEnvironment = <Ev>(prefix:string):OBACoreConfig<Ev> => {
   const env = process.env.NODE_ENV.toLocaleUpperCase();
   const name = OBA.envvar(prefix,"_NAME");
   const mode = OBA.envvar(prefix,"_MODE");
@@ -13,13 +13,13 @@ const setDefaultConfigWithEnvironment = (prefix:string):OBACoreConfig => {
     default:dburi += "_LOCAL";break;
   }
   const dbs =  {[name]:OBA.envvar(prefix,dburi)};
-  const initial:OBACoreConfig = config.get("appconfig");
-  const atRuntime:DeepPartial<OBACoreConfig> = {
-    vars:{name,env,mode,verbose:false},
+  const initial:OBACoreConfig<Ev> = config.get("appconfig");
+  const atRuntime:DeepPartial<OBACoreConfig<Ev>> = {
+    vars:{name,env,mode},
     logger:{label:name},
     db:{connections:dbs},
   };
-  const coreConfig = OBA.merge(initial,atRuntime) as OBACoreConfig;
+  const coreConfig = OBA.merge(initial,atRuntime) as OBACoreConfig<Ev>;
   return coreConfig;
 };
 export {setDefaultConfigWithEnvironment as coreConfig};

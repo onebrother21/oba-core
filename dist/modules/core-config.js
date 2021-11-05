@@ -23,7 +23,7 @@ const setDefaultConfigWithEnvironment = (prefix) => {
     const dbs = { [name]: oba_common_1.default.envvar(prefix, dburi) };
     const initial = config_1.default.get("appconfig");
     const atRuntime = {
-        vars: { name, env, mode, verbose: false },
+        vars: { name, env, mode },
         logger: { label: name },
         db: { connections: dbs },
     };

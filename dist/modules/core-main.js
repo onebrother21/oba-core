@@ -29,24 +29,16 @@ class OBACoreApi {
     constructor(config) {
         this.start = () => __awaiter(this, void 0, void 0, function* () { return yield this.db.start(); });
         this.config = config;
-        for (const k in this.config) {
-            switch (k) {
-                case "vars": this.vars = new vars_main_1.OBACoreVars(config.vars);
-                case "events":
-                    this.events = new emitter_main_1.OBACoreEmitter();
-                    break;
-                case "errors":
-                    this.e = new error_factory_main_1.OBACoreErrorFactory(config.errors);
-                    break;
-                case "logger":
-                    this.logger = new logger_main_1.OBACoreLogger(config.logger);
-                    break;
-                case "db":
-                    this.db = new db_main_1.OBACoreDB(config.db);
-                    break;
-                default: break;
-            }
-        }
+        const components = {
+            vars: () => this.vars = new vars_main_1.OBACoreVars(this.config.vars),
+            events: () => this.events = new emitter_main_1.OBACoreEmitter(this.config.events),
+            errors: () => this.e = new error_factory_main_1.OBACoreErrorFactory(this.config.errors),
+            logger: () => this.logger = new logger_main_1.OBACoreLogger(this.config.logger),
+            db: () => this.db = new db_main_1.OBACoreDB(this.config.db),
+        };
+        for (const k in components)
+            if (this.config[k])
+                components[k]();
     }
 }
 exports.OBACoreApi = OBACoreApi;
