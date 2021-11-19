@@ -6,12 +6,11 @@ export interface OBACoreDB extends OBACoreDBType {
 export declare class OBACoreDB {
     config: OBACoreDBConfig;
     constructor(config: OBACoreDBConfig);
-    model<T extends Document, U extends Model<T>>(dbName: string, modelName: string, schema: Schema<T>, collection: string): Promise<U>;
     start(): Promise<void>;
     shutdown(): Promise<void>;
     startNative(name: string, uri: string, opts: MongoClientOptions): Promise<import("mongodb").Db>;
     print(): void;
-    get(db: string): import("./db-types").DBConnection;
+    get(dbName: string): import("./db-types").DBConnection;
+    model<T extends Document, U extends Model<T>>(dbName: string, modelName: string, schema: Schema<T>, collection: string): Promise<U>;
 }
 export default OBACoreDB;
-export * from "./db-types";

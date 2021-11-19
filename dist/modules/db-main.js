@@ -1,14 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -33,18 +23,11 @@ class OBACoreDB {
         this.config = config;
         this.connections = {};
     }
-    model(dbName, modelName, schema, collection) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const db = this.get(dbName).client;
-            const model = db.model(modelName, schema, collection);
-            yield model.init();
-            return model;
-        });
-    }
     start() {
         return __awaiter(this, void 0, void 0, function* () {
             const { connections, opts } = this.config;
-            const start = (name, uri, opts) => __awaiter(this, void 0, void 0, function* () {
+            for (const k in connections) {
+                const name = k, uri = connections[k];
                 oba_common_1.default.trace(`Attempting to connect @ ${uri}`);
                 try {
                     const connection = yield mongoose_1.default.createConnection(uri, opts).asPromise();
@@ -55,9 +38,7 @@ class OBACoreDB {
                     oba_common_1.default.warn(`MongoDB connection failed -> ${e.message || e}`);
                     this.connections[name] = null;
                 }
-            });
-            for (const k in connections)
-                yield start(k, connections[k], opts);
+            }
         });
     }
     shutdown() {
@@ -77,9 +58,16 @@ class OBACoreDB {
         });
     }
     print() { ob.info(this); }
-    get(db) { return this.connections[db]; }
+    get(dbName) { return this.connections[dbName]; }
+    model(dbName, modelName, schema, collection) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const db = this.get(dbName).client;
+            const model = db.model(modelName, schema, collection);
+            yield model.init();
+            return model;
+        });
+    }
 }
 exports.OBACoreDB = OBACoreDB;
 exports.default = OBACoreDB;
-__exportStar(require("./db-types"), exports);
 //# sourceMappingURL=db-main.js.map

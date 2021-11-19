@@ -11,9 +11,8 @@ export const utils = {
   },
   init:async (s:string) => {
     try{
-      const {db,errors} = coreConfig(s);
-      db.connections = {onebrother:'mongodb://localhost:27017/ob1'};
-      const core:OBACoreApi<null> = new OBACoreApi({db,errors});
+      const c = coreConfig<null>(s);
+      const core:OBACoreApi<null> = new OBACoreApi(c);
       await core.db.start();
       return {core};}
     catch(e){console.error(e);throw e;}

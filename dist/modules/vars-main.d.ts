@@ -6,4 +6,3 @@ export declare class OBACoreVars {
     constructor(config: OBACoreVarsConfig);
 }
 export default OBACoreVars;
-export * from "./vars-types";

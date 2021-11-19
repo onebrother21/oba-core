@@ -8,4 +8,3 @@ export declare class OBACoreApi<Ev> {
     start: () => Promise<void>;
 }
 export default OBACoreApi;
-export * from "./core-types";

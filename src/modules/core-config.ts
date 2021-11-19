@@ -1,6 +1,6 @@
 import config from "config";
 import OBA,{ DeepPartial } from "@onebro/oba-common";
-import { OBACoreConfig } from "./core-main";
+import { OBACoreConfig } from "./core-types";
 
 const setDefaultConfigWithEnvironment = <Ev>(prefix:string):OBACoreConfig<Ev> => {
   const env = process.env.NODE_ENV.toLocaleUpperCase();

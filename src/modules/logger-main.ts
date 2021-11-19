@@ -11,4 +11,3 @@ export class OBACoreLogger {
     logger.makeDir(config.dirname);
     return logger as OBACoreLogger;}}
 export default OBACoreLogger;
-export * from "./logger-types";

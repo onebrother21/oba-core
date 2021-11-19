@@ -14,4 +14,3 @@ export declare class OBACoreEmitter<Ev> {
     constructor(o: OBACoreEmitterConfig<Ev>);
 }
 export default OBACoreEmitter;
-export * from "./emitter-types";

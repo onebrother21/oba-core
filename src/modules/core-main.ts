@@ -18,4 +18,3 @@ export class OBACoreApi<Ev> {
   start = async():Promise<void> => await this.db.start();
 }
 export default OBACoreApi;
-export * from "./core-types";

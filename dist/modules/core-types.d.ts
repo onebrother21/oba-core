@@ -1,8 +1,13 @@
-import { OBACoreVars, OBACoreVarsConfig } from "./vars-main";
-import { OBACoreErrorFactory, OBACoreErrorFactoryConfig } from "./error-factory-main";
-import { OBACoreEmitter, OBACoreEmitterConfig } from "./emitter-main";
-import { OBACoreLogger, OBACoreLoggerConfig } from "./logger-main";
-import { OBACoreDB, OBACoreDBConfig } from "./db-main";
+import { OBACoreVars } from "./vars-main";
+import { OBACoreErrorFactory } from "./error-factory-main";
+import { OBACoreEmitter } from "./emitter-main";
+import { OBACoreLogger } from "./logger-main";
+import { OBACoreDB } from "./db-main";
+import { OBACoreVarsConfig } from "./vars-types";
+import { OBACoreErrorFactoryConfig } from "./error-factory-types";
+import { OBACoreEmitterConfig } from "./emitter-types";
+import { OBACoreLoggerConfig } from "./logger-types";
+import { OBACoreDBConfig } from "./db-types";
 export declare type OBACoreConfigType<Ev> = {
     vars: OBACoreVarsConfig;
     events: OBACoreEmitterConfig<Ev>;

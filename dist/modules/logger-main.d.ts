@@ -5,4 +5,3 @@ export declare class OBACoreLogger {
     constructor(config: OBACoreLoggerConfig);
 }
 export default OBACoreLogger;
-export * from "./logger-types";

@@ -23,4 +23,3 @@ export class OBACoreEmitter<Ev> {
   }
 }
 export default OBACoreEmitter;
-export * from "./emitter-types";
