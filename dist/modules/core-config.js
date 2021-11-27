@@ -4,30 +4,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.coreConfig = void 0;
-const config_1 = __importDefault(require("config"));
 const oba_common_1 = __importDefault(require("@onebro/oba-common"));
+const oba_core_base_api_1 = require("@onebro/oba-core-base-api");
 const setDefaultConfigWithEnvironment = (prefix) => {
-    const env = process.env.NODE_ENV.toLocaleUpperCase();
-    const name = oba_common_1.default.envvar(prefix, "_NAME");
-    const mode = oba_common_1.default.envvar(prefix, "_MODE");
-    let dburi = "_MONGODB";
+    //const initial:OBACoreConfig = config.get("appconfig");
+    const base = (0, oba_core_base_api_1.coreBaseConfig)(prefix);
+    const { name, env } = base.vars;
+    let dbVar = "_MONGODB";
     switch (true) {
         case env === "production":
         case (/live-db/i.test(env)):
-            dburi += "_PROD";
+            dbVar += "_PROD";
             break;
         default:
-            dburi += "_LOCAL";
+            dbVar += "_LOCAL";
             break;
     }
-    const dbs = { [name]: oba_common_1.default.envvar(prefix, dburi) };
-    const initial = config_1.default.get("appconfig");
-    const atRuntime = {
-        vars: { name, env, mode },
-        logger: { label: name },
-        db: { connections: dbs },
-    };
-    const coreConfig = oba_common_1.default.merge(initial, atRuntime);
+    const uri = oba_common_1.default.envvar(prefix, dbVar);
+    const db = { connections: Object.assign({}, uri ? { [name]: uri } : {}) };
+    const logger = { label: name };
+    const atRuntime = { logger, db };
+    const coreConfig = oba_common_1.default.merge(base, atRuntime);
     return coreConfig;
 };
 exports.coreConfig = setDefaultConfigWithEnvironment;

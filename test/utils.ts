@@ -1,4 +1,6 @@
+import { Controller } from "@onebro/oba-common";
 import mongoose from "mongoose";
+import path from "path";
 import OBACoreApi,{coreConfig} from "../src";
 
 export const utils = {
@@ -11,9 +13,11 @@ export const utils = {
   },
   init:async (s:string) => {
     try{
-      const c = coreConfig<null>(s);
+      const c = coreConfig(s);
+      const dirname = path.join(__dirname,"/../../logs");
+      c.logger.file = c.logger.file.map(t => ({...t,dirname}));
       const core:OBACoreApi<null> = new OBACoreApi(c);
-      await core.db.start();
+      await core.init(1);
       return {core};}
     catch(e){console.error(e);throw e;}
   },

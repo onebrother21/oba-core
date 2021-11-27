@@ -30,14 +30,44 @@
       "castError":{"status":422,"message":"Action not permitted. Check data in try again"},
       "someError":{"status":500,"message":"Oops, something went wrong."}
     },
-    "logger":{"levels":["access","info","warn","error"]},
+    "logger":{
+      "db":[
+        {
+          "level":"error",
+          "collection":"server_error_log",
+          "options":{"useUnifiedTopology":true},
+          "metaKey":"meta",
+          "decolorize":true,
+          "tryReconnect":true,
+          "expreAfterSeconds":120
+        },{
+          "level":"access",
+          "collection":"server_reqs_log",
+          "options":{"useUnifiedTopology":true},
+          "metaKey":"meta",
+          "decolorize":true,
+          "tryReconnect":true,
+          "expreAfterSeconds":120
+        }
+      ],
+      "file":[
+        {
+          "level":"error"
+        },{
+          "level":"access"
+        },{
+          "level":"info"
+        }
+      ]
+    },
     "db":{
       "opts":{
         "autoIndex":true,
         "maxPoolSize":10,
         "serverSelectionTimeoutMS":5000,
         "socketTimeoutMS":45000,
-        "family":4},
+        "family":4
+      },
       "connections":{}
     }
   }

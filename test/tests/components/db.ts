@@ -3,7 +3,7 @@ import {Schema} from "mongoose";
 import {OBACoreApi,OBACoreConfig,coreConfig} from "../../../src";
 
 export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
-  let core:OBACoreApi<null>,c:OBACoreConfig<null>,
+  let core:OBACoreApi<null>,c:OBACoreConfig,
   model:any,id:any;
   const schema = new Schema({
     name:{type:String,unique:true,required:true,index:true},
@@ -16,19 +16,18 @@ export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
       const {db,vars} = coreConfig("OBA_CORE");
       c = {db,vars};
       core = new OBACoreApi(c);
-      core.init();
+      await core.init(1);
       J.is(core);
       J.true(core.db);
     },1E9);
     it(`has connections`,async () => {
-      await core.db.start();
-      console.log(core.db);
       J.true(core.db.get(core.vars.name));
     },1E9);
     it(`has "model" method`,async () => {
       model = await core.db.model(core.vars.name,"TestModel",schema,"testmodels");
-      J.prop(core.db.get(core.vars.name).client.models,"TestModel");
+      J.prop(core.db.get(core.vars.name).conn.models,"TestModel");
     },1E9);
+    it(`print component`,async () => {core.db.print()},1E9);
   });
   J.utils.desc("Mongoose Conn",() => {
     it(`create & save`,async () => {

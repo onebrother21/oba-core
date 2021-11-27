@@ -1,5 +1,5 @@
 import winston, { LogEntry } from "winston";
-import { WinstonLoggerType, WinstonLoggerConfig } from "./logger-types";
+import { WinstonTransportFileConfig, WinstonTransportMongoDbConfig } from "./logger-types";
 import { AppError } from "@onebro/oba-common";
 export declare const levels: {
     crit: number;
@@ -12,7 +12,9 @@ export declare const levels: {
 export declare const levelGuard: (level: string) => winston.Logform.Format;
 export declare const printMsg: (m: LogEntry) => string;
 export declare const makeFormat: (name: string) => winston.Logform.Format;
+export declare const makeDbFormat: (name: string) => winston.Logform.Format;
+export declare const makeFileTransport: (o: WinstonTransportFileConfig) => winston.transports.FileTransportInstance;
+export declare const makeMongoDbTransport: (o: WinstonTransportMongoDbConfig) => import("winston-mongodb").MongoDBTransportInstance;
+export declare const makeLogger: <T extends "file" | "db">(label: string, type: T, o: (WinstonTransportFileConfig | WinstonTransportMongoDbConfig)[]) => winston.Logger;
 export declare const makeDir: (path: string) => true | void;
-export declare const makeTransport: (level: string, dirname: string) => winston.transports.FileTransportInstance;
 export declare const makeLogMsg: (e: AppError | any) => string;
-export declare const makeLogger: (c: WinstonLoggerConfig) => WinstonLoggerType;

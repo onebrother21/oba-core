@@ -1,20 +1,25 @@
-import {OBACoreVars} from "./vars-main";
-import {OBACoreErrorFactory} from "./error-factory-main";
-import {OBACoreEmitter} from "./emitter-main";
+import OBACoreBaseApi from "@onebro/oba-core-base-api";
 import {OBACoreLogger} from "./logger-main";
 import {OBACoreDB} from "./db-main";
 import {OBACoreType,OBACoreConfig} from "./core-types";
+import {Component,AnyBoolean} from "@onebro/oba-common";
 
-export interface OBACoreApi<Ev> extends OBACoreType<Ev> {}
-export class OBACoreApi<Ev> {
-  constructor(public config:OBACoreConfig<Ev>){}
-  init = () => {
-    this.config.vars?this.vars = new OBACoreVars(this.config.vars):null;
-    this.config.events?this.events = new OBACoreEmitter<Ev>(this.config.events):null;
-    this.config.e||this.config.errors?this.e = new OBACoreErrorFactory(this.config.e||this.config.errors):null;
-    this.config.logger?this.logger = new OBACoreLogger(this.config.logger):null;
-    this.config.db?this.db = new OBACoreDB(this.config.db):null;
+export interface OBACoreApi<Ev> extends Component<OBACoreConfig,Ev>,OBACoreType<Ev> {}
+export class OBACoreApi<Ev> extends Component<OBACoreConfig,Ev> {
+  get e(){return this.errors;}
+  get v(){return this.vars;}
+  set v(vars:OBACoreApi<Ev>["vars"]){this.vars = vars;}
+  init = async (startDb?:AnyBoolean) => {
+    const {ctrl,config:{db,logger,...baseConfig}} = this;
+    const base = new OBACoreBaseApi<Ev>(baseConfig,ctrl);
+    await base.init();
+    const {errors,vars} = base;
+    this.vars = vars;
+    this.errors = errors;
+    this.logger = logger?new OBACoreLogger<Ev>(logger,ctrl):null;
+    this.db = db?new OBACoreDB<Ev>(db,ctrl):null;
+    await this.logger?.init();
+    startDb?await this.db?.init():null;
   };
-  start = async():Promise<void> => await this.db.start();
 }
 export default OBACoreApi;

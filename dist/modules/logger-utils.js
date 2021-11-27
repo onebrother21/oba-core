@@ -22,57 +22,55 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeLogger = exports.makeLogMsg = exports.makeTransport = exports.makeDir = exports.makeFormat = exports.printMsg = exports.levelGuard = exports.levels = void 0;
+exports.makeLogMsg = exports.makeDir = exports.makeLogger = exports.makeMongoDbTransport = exports.makeFileTransport = exports.makeDbFormat = exports.makeFormat = exports.printMsg = exports.levelGuard = exports.levels = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const winston_1 = __importStar(require("winston"));
-const oba_common_1 = require("@onebro/oba-common");
-const { combine, label, timestamp, printf } = winston_1.format;
+const winston_mongodb_1 = require("winston-mongodb");
+const { combine, label, timestamp, printf, errors, json } = winston_1.format;
 exports.levels = { crit: 0, error: 1, warn: 2, info: 3, access: 4, debug: 5 };
 const levelGuard = (level) => (0, winston_1.format)(info => info.level === level ? info : null)();
 exports.levelGuard = levelGuard;
-const printMsg = (m) => `${m.timestamp} [${m.label}] ${m.level}:${m.message}`;
+const printMsg = (m) => JSON.stringify(Object.assign({ time: m.timestamp, label: m.label, level: m.level }, JSON.parse(m.message)));
 exports.printMsg = printMsg;
-const makeFormat = (name) => combine(label({ label: name }), timestamp(), printf(exports.printMsg));
+const makeFormat = (name) => combine(label({ label: name }), timestamp(), errors({ stack: true }), printf(exports.printMsg));
 exports.makeFormat = makeFormat;
+const makeDbFormat = (name) => combine(label({ label: name }), timestamp(), errors({ stack: true }), printf(exports.printMsg), json());
+exports.makeDbFormat = makeDbFormat;
+const makeFileTransport = (o) => new winston_1.transports.File({
+    format: (0, exports.levelGuard)(o.level),
+    filename: path_1.default.join(o.dirname, `/${o.level}.log`),
+    level: o.level,
+    handleExceptions: o.level == "error" || o.level == "critical"
+});
+exports.makeFileTransport = makeFileTransport;
+const makeMongoDbTransport = (o) => new winston_mongodb_1.MongoDB(o);
+exports.makeMongoDbTransport = makeMongoDbTransport;
+const makeLogger = (label, type, o) => winston_1.default.createLogger({
+    levels: exports.levels,
+    format: (0, exports.makeFormat)(label),
+    transports: o.map(t => type == "file" ? (0, exports.makeFileTransport)(t) : (0, exports.makeMongoDbTransport)(t)),
+    exitOnError: false,
+});
+exports.makeLogger = makeLogger;
 const makeDir = (path) => fs_1.default.existsSync(path) || fs_1.default.mkdirSync(path);
 exports.makeDir = makeDir;
-const makeTransport = (level, dirname) => new (winston_1.transports.File)({
-    format: (0, exports.levelGuard)(level),
-    filename: path_1.default.join(dirname, `/${level}.log`),
-    level,
-    handleExceptions: level == "error" || level == "critical"
-});
-exports.makeTransport = makeTransport;
 const makeLogMsg = (e) => {
     switch (true) {
         case e instanceof Error: {
-            return `{
-        time:${new Date().toLocaleString("en-US", oba_common_1.appLocals.dateFormat)},
-        name:${e.name},
-        message:"${e.message}",
-        warning:${!!e.warning},
-        status:${e.status},
-        code:${e.code ? e.code.toString() : "-"},
-        info:"${e.info ? JSON.stringify(e.info) : null}",
-        errors":${e.errors ? JSON.stringify(e.errors) : "-"}",
-        stack:${e.stack},
-      }`;
+            return JSON.stringify({
+                name: e.name,
+                message: e.message,
+                warning: !!e.warning,
+                status: e.status,
+                code: e.code ? e.code.toString() : "-",
+                info: e.info || {},
+                errors: e.errors || {},
+                stack: e.stack,
+            });
         }
-        default: {
-            return `{
-        time:${new Date().toLocaleString("en-US", oba_common_1.appLocals.dateFormat)},
-      }`;
-        }
+        default: return JSON.stringify(e);
     }
 };
 exports.makeLogMsg = makeLogMsg;
-//create access msg
-const makeLogger = (c) => winston_1.default.createLogger({
-    levels: exports.levels,
-    format: (0, exports.makeFormat)(c.label),
-    transports: c.levels.map(l => (0, exports.makeTransport)(l, c.dirname)),
-    exitOnError: false
-});
-exports.makeLogger = makeLogger;
 //# sourceMappingURL=logger-utils.js.map

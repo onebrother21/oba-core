@@ -1,6 +1,7 @@
 import winston from "winston";
-import { AppError } from "@onebro/oba-common";
-export declare type WinstonQueryOpts = {};
+import { AppError, Enum, Keys } from "@onebro/oba-common";
+import { DBConnectionOpts } from "./db-types";
+export declare type WinstonQueryOpts = winston.QueryOptions;
 export declare type WinstonQuery = (o: WinstonQueryOpts, cb: (e: Error, results: any) => void) => any;
 export declare type WinstonLoggerLevels = {
     crit: number;
@@ -10,15 +11,33 @@ export declare type WinstonLoggerLevels = {
     access: number;
     debug: number;
 };
-export declare type WinstonLoggerConfig = {
-    levels: string[];
-    dirname?: string;
-    label?: string;
-    uri?: string;
+export declare type WinstonTransportConfig = {
+    level: string;
 };
-export declare type OBACoreLoggerConfig = WinstonLoggerConfig;
-export declare type WinstonLoggerType = winston.Logger & Record<keyof WinstonLoggerLevels, winston.LeveledLogMethod>;
-export declare type OBACoreLoggerType = WinstonLoggerType & {
+export declare type WinstonTransportFileConfig = WinstonTransportConfig & {
+    dirname: string;
+};
+export declare type WinstonTransportMongoDbConfig = WinstonTransportConfig & {
+    db: string | Promise<any>;
+    silent?: boolean;
+    options?: DBConnectionOpts;
+    collection?: string;
+    decolorize?: boolean;
+    tryReconnect?: boolean;
+    metaKey?: string;
+    name?: string;
+    expireAfterSeconds?: number;
+};
+export declare type WinstonLoggerFileType = winston.Logger & Enum<winston.LeveledLogMethod, Keys<WinstonLoggerLevels>>;
+export declare type WinstonLoggerDBType = winston.Logger & Enum<Promise<any>, Keys<WinstonLoggerLevels>>;
+export declare type OBACoreLoggerConfig = {
+    label: string;
+    file?: WinstonTransportFileConfig[];
+    db?: WinstonTransportMongoDbConfig[];
+};
+export declare type OBACoreLoggerType = {
     makeDir: (path: string) => true | void;
     getMsg: (e: AppError) => string;
+    file?: WinstonLoggerFileType;
+    db?: WinstonLoggerDBType;
 };

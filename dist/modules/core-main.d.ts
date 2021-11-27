@@ -1,10 +1,11 @@
 import { OBACoreType, OBACoreConfig } from "./core-types";
-export interface OBACoreApi<Ev> extends OBACoreType<Ev> {
+import { Component, AnyBoolean } from "@onebro/oba-common";
+export interface OBACoreApi<Ev> extends Component<OBACoreConfig, Ev>, OBACoreType<Ev> {
 }
-export declare class OBACoreApi<Ev> {
-    config: OBACoreConfig<Ev>;
-    constructor(config: OBACoreConfig<Ev>);
-    init: () => void;
-    start: () => Promise<void>;
+export declare class OBACoreApi<Ev> extends Component<OBACoreConfig, Ev> {
+    get e(): import("@onebro/oba-core-base-api").OBACoreBaseErrorFactory<Ev>;
+    get v(): OBACoreApi<Ev>["vars"];
+    set v(vars: OBACoreApi<Ev>["vars"]);
+    init: (startDb?: AnyBoolean) => Promise<void>;
 }
 export default OBACoreApi;

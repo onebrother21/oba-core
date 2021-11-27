@@ -1,46 +1,55 @@
 import fs from "fs";
 import path from "path";
 import winston,{LogEntry,transports,format} from "winston";
-import { WinstonLoggerType,WinstonLoggerConfig,} from "./logger-types";
-import { AppError,appLocals as locals} from "@onebro/oba-common";
+import {MongoDB} from "winston-mongodb";
+import {
+  WinstonTransportFileConfig,
+  WinstonTransportMongoDbConfig,
+} from "./logger-types";
+import { AppError } from "@onebro/oba-common";
 
-const {combine,label,timestamp,printf} = format;
+const {combine,label,timestamp,printf,errors,json} = format;
 export const levels = {crit:0,error:1,warn:2,info:3,access:4,debug:5};
 export const levelGuard = (level:string) => format(info => info.level === level?info:null)();
-export const printMsg = (m:LogEntry) => `${m.timestamp} [${m.label}] ${m.level}:${m.message}`;
-export const makeFormat = (name:string) => combine(label({label:name}),timestamp(),printf(printMsg));
+export const printMsg = (m:LogEntry) => JSON.stringify({
+  time:m.timestamp,
+  label:m.label,
+  level:m.level,
+  ...JSON.parse(m.message),
+});
+export const makeFormat = (name:string) => combine(label({label:name}),timestamp(),errors({stack:true}),printf(printMsg));
+export const makeDbFormat = (name:string) => combine(label({label:name}),timestamp(),errors({stack:true}),printf(printMsg),json());
+export const makeFileTransport = (o:WinstonTransportFileConfig) => new transports.File({
+  format:levelGuard(o.level),
+  filename:path.join(o.dirname,`/${o.level}.log`),
+  level:o.level,
+  handleExceptions:o.level == "error"||o.level == "critical"
+});
+export const makeMongoDbTransport = (o:WinstonTransportMongoDbConfig) => new MongoDB(o);
+export const makeLogger = <T extends "file"|"db">(
+  label:string,
+  type:T,
+  o:(WinstonTransportFileConfig|WinstonTransportMongoDbConfig)[]) => winston.createLogger({
+  levels,
+  format:makeFormat(label),
+  transports:o.map(t => type == "file"?makeFileTransport(t as any):makeMongoDbTransport(t as any)),
+  exitOnError:false,
+});
 export const makeDir = (path:string) => fs.existsSync(path)||fs.mkdirSync(path);
-export const makeTransport = (level:string,dirname:string) => new (transports.File)({
-  format:levelGuard(level),
-  filename:path.join(dirname,`/${level}.log`),
-  level,
-  handleExceptions:level == "error"||level == "critical"});
 export const makeLogMsg = (e:AppError|any) => {
   switch(true){
     case e instanceof Error:{
-      return `{
-        time:${new Date().toLocaleString("en-US",locals.dateFormat as any)},
-        name:${e.name},
-        message:"${e.message}",
-        warning:${!!e.warning},
-        status:${e.status},
-        code:${e.code?e.code.toString():"-"},
-        info:"${e.info?JSON.stringify(e.info):null}",
-        errors":${e.errors?JSON.stringify(e.errors):"-"}",
-        stack:${e.stack},
-      }`;
+      return JSON.stringify({
+        name:e.name,
+        message:e.message,
+        warning:!!e.warning,
+        status:e.status,
+        code:e.code?e.code.toString():"-",
+        info:e.info||{},
+        errors:e.errors||{},
+        stack:e.stack,
+      });
     }
-    default:{
-      return `{
-        time:${new Date().toLocaleString("en-US",locals.dateFormat as any)},
-      }`;
-    }
+    default:return JSON.stringify(e);
   }
 };
-//create access msg
-export const makeLogger = (c:WinstonLoggerConfig) => winston.createLogger({
-  levels,
-  format:makeFormat(c.label),
-  transports:c.levels.map(l => makeTransport(l,c.dirname)),
-  exitOnError:false
-}) as WinstonLoggerType;

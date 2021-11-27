@@ -1,14 +1,10 @@
 import {J} from "../../utils";
 import {obaCoreDBInitTests} from "./db";
-import {obaCoreEmitterInitTests} from "./emitter";
-import {obaCoreErrorFactoryInitTests} from "./error-factory";
-import {obaCoreLoggerInitTests} from "./logger";
-import {obaCoreVarsInitTests} from "./vars";
+import {obaCoreLoggerFileInitTests} from "./logger-file";
+import {obaCoreLoggerDbInitTests} from "./logger-db";
 
 export const allCoreComponents = () => J.utils.desc("CORE COMPONENTS TESTS",() => {
-  obaCoreVarsInitTests();
-  obaCoreEmitterInitTests();
-  obaCoreErrorFactoryInitTests();
-  obaCoreLoggerInitTests();
   obaCoreDBInitTests();
+  obaCoreLoggerFileInitTests();
+  obaCoreLoggerDbInitTests();
 });

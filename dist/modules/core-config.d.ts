@@ -1,3 +1,3 @@
 import { OBACoreConfig } from "./core-types";
-declare const setDefaultConfigWithEnvironment: <Ev>(prefix: string) => Partial<import("./core-types").OBACoreConfigType<Ev>>;
+declare const setDefaultConfigWithEnvironment: (prefix: string) => OBACoreConfig;
 export { setDefaultConfigWithEnvironment as coreConfig };

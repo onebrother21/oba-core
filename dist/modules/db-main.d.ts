@@ -1,16 +1,14 @@
-import { Document, Model, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { MongoClientOptions } from "mongodb";
 import { OBACoreDBType, OBACoreDBConfig } from "./db-types";
-export interface OBACoreDB extends OBACoreDBType {
+import { Component } from "@onebro/oba-common";
+export interface OBACoreDB<Ev> extends Component<OBACoreDBConfig, Ev>, OBACoreDBType {
 }
-export declare class OBACoreDB {
-    config: OBACoreDBConfig;
-    constructor(config: OBACoreDBConfig);
-    start(): Promise<void>;
-    shutdown(): Promise<void>;
-    startNative(name: string, uri: string, opts: MongoClientOptions): Promise<import("mongodb").Db>;
-    print(): void;
+export declare class OBACoreDB<Ev> extends Component<OBACoreDBConfig, Ev> {
+    init: () => Promise<void>;
+    shutdown: () => Promise<void>;
+    startNative: (name: string, uri: string, opts: MongoClientOptions) => Promise<import("mongodb").Db>;
     get(dbName: string): import("./db-types").DBConnection;
-    model<T extends Document, U extends Model<T>>(dbName: string, modelName: string, schema: Schema<T>, collection: string): Promise<U>;
+    model: <T extends mongoose.Document<any, any, any>, U extends mongoose.Model<T, {}, {}, {}>>(dbName: string, modelName: string, schema: mongoose.Schema<T, mongoose.Model<T, any, any, any>, {}>, collection: string) => Promise<U>;
 }
 export default OBACoreDB;
