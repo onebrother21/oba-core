@@ -18,7 +18,6 @@ export const printMsg = (m:LogEntry) => JSON.stringify({
   ...JSON.parse(m.message),
 });
 export const makeFormat = (name:string) => combine(label({label:name}),timestamp(),errors({stack:true}),printf(printMsg));
-export const makeDbFormat = (name:string) => combine(label({label:name}),timestamp(),errors({stack:true}),printf(printMsg),json());
 export const makeFileTransport = (o:WinstonTransportFileConfig) => new transports.File({
   format:levelGuard(o.level),
   filename:path.join(o.dirname,`/${o.level}.log`),
@@ -32,7 +31,7 @@ export const makeLogger = <T extends "file"|"db">(
   o:(WinstonTransportFileConfig|WinstonTransportMongoDbConfig)[]) => winston.createLogger({
   levels,
   format:makeFormat(label),
-  transports:o.map(t => type == "file"?makeFileTransport(t as any):makeMongoDbTransport(t as any)),
+  transports:o.map(t => type == "file"?makeFileTransport(t as any):makeMongoDbTransport({...t,label} as any)),
   exitOnError:false,
 });
 export const makeDir = (path:string) => fs.existsSync(path)||fs.mkdirSync(path);

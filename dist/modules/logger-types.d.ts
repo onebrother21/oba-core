@@ -1,5 +1,5 @@
 import winston from "winston";
-import { AppError, Enum, Keys } from "@onebro/oba-common";
+import { AppError, Enum, Info, Keys } from "@onebro/oba-common";
 import { DBConnectionOpts } from "./db-types";
 export declare type WinstonQueryOpts = winston.QueryOptions;
 export declare type WinstonQuery = (o: WinstonQueryOpts, cb: (e: Error, results: any) => void) => any;
@@ -18,6 +18,7 @@ export declare type WinstonTransportFileConfig = WinstonTransportConfig & {
     dirname: string;
 };
 export declare type WinstonTransportMongoDbConfig = WinstonTransportConfig & {
+    label: string;
     db: string | Promise<any>;
     silent?: boolean;
     options?: DBConnectionOpts;
@@ -28,8 +29,11 @@ export declare type WinstonTransportMongoDbConfig = WinstonTransportConfig & {
     name?: string;
     expireAfterSeconds?: number;
 };
-export declare type WinstonLoggerFileType = winston.Logger & Enum<winston.LeveledLogMethod, Keys<WinstonLoggerLevels>>;
-export declare type WinstonLoggerDBType = winston.Logger & Enum<Promise<any>, Keys<WinstonLoggerLevels>>;
+export declare type LeveledDbLogFlag = `{"type":"${"ACCESS" | "ERROR" | "INFO" | "WARN" | "DEBUG" | "CRIT"}"}`;
+export declare type LeveledDbLogMethod = (s: LeveledDbLogFlag, meta?: Info<"meta">) => Promise<LeveledDbLogMethod>;
+export declare type WinstonLoggerNoMethods = Omit<winston.Logger, Keys<WinstonLoggerLevels>>;
+export declare type WinstonLoggerFileType = WinstonLoggerNoMethods & Enum<winston.LeveledLogMethod, Keys<WinstonLoggerLevels>>;
+export declare type WinstonLoggerDBType = WinstonLoggerNoMethods & Enum<LeveledDbLogMethod, Keys<WinstonLoggerLevels>>;
 export declare type OBACoreLoggerConfig = {
     label: string;
     file?: WinstonTransportFileConfig[];
@@ -37,7 +41,7 @@ export declare type OBACoreLoggerConfig = {
 };
 export declare type OBACoreLoggerType = {
     makeDir: (path: string) => true | void;
-    getMsg: (e: AppError) => string;
+    getMsg: (e: AppError | any) => string;
     file?: WinstonLoggerFileType;
     db?: WinstonLoggerDBType;
 };

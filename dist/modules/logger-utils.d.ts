@@ -12,7 +12,6 @@ export declare const levels: {
 export declare const levelGuard: (level: string) => winston.Logform.Format;
 export declare const printMsg: (m: LogEntry) => string;
 export declare const makeFormat: (name: string) => winston.Logform.Format;
-export declare const makeDbFormat: (name: string) => winston.Logform.Format;
 export declare const makeFileTransport: (o: WinstonTransportFileConfig) => winston.transports.FileTransportInstance;
 export declare const makeMongoDbTransport: (o: WinstonTransportMongoDbConfig) => import("winston-mongodb").MongoDBTransportInstance;
 export declare const makeLogger: <T extends "file" | "db">(label: string, type: T, o: (WinstonTransportFileConfig | WinstonTransportMongoDbConfig)[]) => winston.Logger;

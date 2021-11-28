@@ -13,21 +13,16 @@ export class OBACoreLogger<Ev> extends Component<OBACoreLoggerConfig,Ev> {
     const {label,file,db} = this.config;
     this.getMsg = makeLogMsg;
     this.makeDir = makeDir;
-    switch(true){
-      case file && file.length && true:{
-        const firstTrans = file[0];
-        const dirname = firstTrans?.dirname||null;
-        firstTrans?this.makeDir(dirname):null;
-        const logger = makeLogger(label,"file",file) ;
-        this.file = logger as WinstonLoggerFileType;
-        break;
-      }
-      case db && db.length && true:{
-        const logger = makeLogger(label,"db",db);
-        this.db = logger as WinstonLoggerDBType;
-        break;
-      }
-      default:break;
+    if(file && file.length){
+      const firstTrans = file[0];
+      const dirname = firstTrans?.dirname||null;
+      firstTrans?this.makeDir(dirname):null;
+      const logger = makeLogger(label,"file",file) as any;
+      this.file = logger as WinstonLoggerFileType;
+    }
+    if(db && db.length){
+      const logger = makeLogger(label,"db",db) as any;
+      this.db = logger as WinstonLoggerDBType;
     }
   };
 }

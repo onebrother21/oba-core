@@ -19,21 +19,16 @@ class OBACoreLogger extends oba_common_1.Component {
             const { label, file, db } = this.config;
             this.getMsg = logger_utils_1.makeLogMsg;
             this.makeDir = logger_utils_1.makeDir;
-            switch (true) {
-                case file && file.length && true: {
-                    const firstTrans = file[0];
-                    const dirname = (firstTrans === null || firstTrans === void 0 ? void 0 : firstTrans.dirname) || null;
-                    firstTrans ? this.makeDir(dirname) : null;
-                    const logger = (0, logger_utils_1.makeLogger)(label, "file", file);
-                    this.file = logger;
-                    break;
-                }
-                case db && db.length && true: {
-                    const logger = (0, logger_utils_1.makeLogger)(label, "db", db);
-                    this.db = logger;
-                    break;
-                }
-                default: break;
+            if (file && file.length) {
+                const firstTrans = file[0];
+                const dirname = (firstTrans === null || firstTrans === void 0 ? void 0 : firstTrans.dirname) || null;
+                firstTrans ? this.makeDir(dirname) : null;
+                const logger = (0, logger_utils_1.makeLogger)(label, "file", file);
+                this.file = logger;
+            }
+            if (db && db.length) {
+                const logger = (0, logger_utils_1.makeLogger)(label, "db", db);
+                this.db = logger;
             }
         });
     }

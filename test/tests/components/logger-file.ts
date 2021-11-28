@@ -25,7 +25,7 @@ export const obaCoreLoggerFileInitTests = () => J.utils.desc("AM Logger Init (Fi
     J.is(core.logger.file.crit);
     J.is(core.logger.file.debug);
   });
-  it(`has query methods`,async () => J.is(core.logger.file.query));
+  it(`has query method`,async () => J.is(core.logger.file.query));
   it(`has logs directory`,async () => {
     const dirname = core.config.logger.file[0].dirname;
     const hasDir = fs.existsSync(dirname);
@@ -44,8 +44,8 @@ export const obaCoreLoggerFileInitTests = () => J.utils.desc("AM Logger Init (Fi
   });
   it(`writes log msg to file`,async () => {
     try {
-      const errorLogger = core.logger.file.error as any
-      const info = await errorLogger(logmsg);
+      const errorLogger = core.logger.file.error;
+      const info = errorLogger(logmsg);
       J.is(info);
     }
     catch(e){console.error(e);}

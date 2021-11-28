@@ -22,7 +22,7 @@ export const obaCoreLoggerDbInitTests = () => J.utils.desc("AM Logger Init (Db)"
     J.is(core.logger.db.info);
     J.is(core.logger.db.crit);
     J.is(core.logger.db.debug);});
-  it(`has query methods`,async () => J.is(core.logger.db.query));
+  it(`has query method`,async () => J.is(core.logger.db.query));
   it(`makes log msg from error`,async () => {
     const e = new AppError({
       name:"UserInputError",
@@ -36,17 +36,35 @@ export const obaCoreLoggerDbInitTests = () => J.utils.desc("AM Logger Init (Db)"
   });
   it(`writes log msg to db`,async () => {
     try{
-      const errorLogger = core.logger.db.error as any;
-      const info = await errorLogger(logmsg);
+      const dbLogger = core.logger.db.info;
+      const info = await dbLogger(`{"type":"ERROR"}`,{meta:JSON.parse(logmsg)});
       J.is(info);
     }
     catch(e){console.error(e);}
   },1E9);
+  it(`makes log msg from req info`,async () => {
+    const e = {
+      ip:"123.45.67.890",
+      method:"GET",
+      url:"/OB/A/123",
+      status:200,
+    };
+    logmsg = core.logger.getMsg(e);
+    J.is(logmsg);
+  });
+  it(`writes log msg to db`,async () => {
+    try {
+      const dbLogger = core.logger.db.info;
+      const info = await dbLogger(`{"type":"ACCESS"}`,{meta:JSON.parse(logmsg)});
+      J.is(info);
+    }
+    catch(e){console.error(e);}
+  });
   it(`has log collection`,async () => {
     await OBA.sleep(50);
     const db = core.db.get(core.vars.name);
     const logName = core.config.logger.db[0].collection;
-    const collections = db && logName?db.conn.db.listCollections():null;
+    const collections = db && logName?await db.conn.db.listCollections().toArray():null;
     console.log(collections);
     //const hasCollection = isDbLogger && collection;
     //isDbLogger?J.true(hasCollection):null;

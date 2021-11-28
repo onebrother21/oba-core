@@ -16,6 +16,6 @@ export const wrapup = () => J.utils.desc("WRAPUP",() => {
 export const allTests = () => J.utils.desc("ALL TESTS",() => {
   init();
   allCoreComponents();
-  //finalCheck();
+  finalCheck();
   wrapup();
 });
