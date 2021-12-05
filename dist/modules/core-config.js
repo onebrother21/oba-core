@@ -24,7 +24,7 @@ const setDefaultConfigWithEnvironment = (prefix) => {
     const db = { connections: Object.assign({}, uri ? { [name]: uri } : {}) };
     const logger = { label: name };
     const atRuntime = { logger, db };
-    const coreConfig = oba_common_1.default.merge(base, atRuntime);
+    const coreConfig = oba_common_1.default.mergeObj(base, atRuntime);
     return coreConfig;
 };
 exports.coreConfig = setDefaultConfigWithEnvironment;

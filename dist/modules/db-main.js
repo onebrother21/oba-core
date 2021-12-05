@@ -46,15 +46,15 @@ class OBACoreDB extends oba_common_1.Component {
             for (const k in connections) {
                 const name = k, uri = connections[k];
                 const dbStr = `-> ${name.toLocaleUpperCase()} @ ${uri}`;
-                oba_common_1.default.trace(`Attempting to connect ${dbStr}`);
+                oba_common_1.default.here("t", `Attempting to connect ${dbStr}`);
                 try {
                     const connection = yield mongoose_1.default.createConnection(uri, opts).asPromise();
                     this.connections[name] = { uri, conn: connection };
-                    oba_common_1.default.ok(`MongoDB connected -> ${dbStr}`);
+                    oba_common_1.default.here("k", `MongoDB connected -> ${dbStr}`);
                 }
                 catch (e) {
                     this.connections[name] = null;
-                    oba_common_1.default.warn(`MongoDB connection failed -> ${e.message || e}`);
+                    oba_common_1.default.here("w", `MongoDB connection failed -> ${e.message || e}`);
                 }
             }
         });
@@ -67,7 +67,7 @@ class OBACoreDB extends oba_common_1.Component {
                 return connection.db(name);
             }
             catch (e) {
-                oba_common_1.default.error(`DB Error: ${e}`);
+                oba_common_1.default.here("e", `DB Error: ${e}`);
             }
         });
         this.model = (dbName, modelName, schema, collection) => __awaiter(this, void 0, void 0, function* () {

@@ -1,5 +1,6 @@
 import {J} from "../../utils";
 import {Schema} from "mongoose";
+import OB from "@onebro/oba-common";
 import {OBACoreApi,OBACoreConfig,coreConfig} from "../../../src";
 
 export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
@@ -36,7 +37,7 @@ export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
       J.is(m.name,"Johnny");
       J.is(m.other,"JohnnyOtherShit");
       await m.save();
-      console.log(m.toJSON());
+      OB.here("l",m.toJSON());
       id = m._id;
     },1e9);
     it(`fetch by id`,async () => {
@@ -53,7 +54,7 @@ export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
     it(`remove`,async () => {
       const removed = await model.findByIdAndRemove(id);
       J.is(removed);
-      console.log(removed)},1E9);
+      OB.here("l",removed)},1E9);
     it(`create & save many`,async () => {
       const newOnes = [{name:"Johnny"},{name:"Jimmy"}];
       const m = await model.create(newOnes);
@@ -61,7 +62,7 @@ export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
       J.gt(m.length,0);},1E9);
     it(`query (fetch many)`,async () => {
       const m = await model.find({name:/J/});
-      console.log(m);
+      OB.here("l",m);
       J.is(m);
       J.gt(m.length,0)},1E9);
     it(`update many`,async () => {
@@ -71,7 +72,7 @@ export const obaCoreDBInitTests = () => J.utils.desc("AM DB Init",() => {
       J.is(m.value,5)},1E9);
     it(`remove many`,async () => {
       const removed = await model.deleteMany({name:/J/});
-      console.log({removed});
+      OB.here("l",{removed});
       J.is(removed.deletedCount,2);
     },1E9);
     //it(`core.db/mongoose shutdown on exit`,async () => events.send({shutdown:0}));

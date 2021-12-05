@@ -2,7 +2,7 @@ import mongoose,{Document,Model,Schema} from "mongoose";
 import {MongoClient,MongoClientOptions} from "mongodb";
 import bluebird from "bluebird";
 import {OBACoreDBType,OBACoreDBConfig} from "./db-types";
-import OBA, { Component } from "@onebro/oba-common";
+import OB,{ Component } from "@onebro/oba-common";
 mongoose.Promise = bluebird;
 
 export interface OBACoreDB<Ev> extends Component<OBACoreDBConfig,Ev>,OBACoreDBType {}
@@ -13,15 +13,15 @@ export class OBACoreDB<Ev> extends Component<OBACoreDBConfig,Ev> {
     for(const k in connections) {
       const name = k,uri = connections[k];
       const dbStr = `-> ${name.toLocaleUpperCase()} @ ${uri}`;
-      OBA.trace(`Attempting to connect ${dbStr}`);
+      OB.here("t",`Attempting to connect ${dbStr}`);
       try {
         const connection = await mongoose.createConnection(uri,opts).asPromise();
         this.connections[name] = {uri,conn:connection};
-        OBA.ok(`MongoDB connected -> ${dbStr}`);
+        OB.here("k",`MongoDB connected -> ${dbStr}`);
       }
       catch(e){
         this.connections[name] = null;
-        OBA.warn(`MongoDB connection failed -> ${e.message||e}`);
+        OB.here("w",`MongoDB connection failed -> ${e.message||e}`);
       }
     }
   };
@@ -30,7 +30,7 @@ export class OBACoreDB<Ev> extends Component<OBACoreDBConfig,Ev> {
     try{
       const connection = await MongoClient.connect(uri,opts);
       return connection.db(name);}
-    catch(e){OBA.error(`DB Error: ${e}`);}
+    catch(e){OB.here("e",`DB Error: ${e}`);}
   };
   get(dbName:string){return this.connections[dbName];}
   model = async <T extends Document,U extends Model<T>>(dbName:string,modelName:string,schema:Schema<T>,collection:string):Promise<U> => {

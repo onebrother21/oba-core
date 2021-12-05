@@ -1,7 +1,7 @@
 import {J} from "../../utils";
 import fs from "fs";
 import path from "path";
-import {AppError} from "@onebro/oba-common";
+import OB,{AppError} from "@onebro/oba-common";
 import {OBACoreApi,coreConfig,WinstonQueryOpts} from "../../../src";
 
 export const obaCoreLoggerFileInitTests = () => J.utils.desc("AM Logger Init (File)",() => {
@@ -48,7 +48,7 @@ export const obaCoreLoggerFileInitTests = () => J.utils.desc("AM Logger Init (Fi
       const info = errorLogger(logmsg);
       J.is(info);
     }
-    catch(e){console.error(e);}
+    catch(e){OB.here("e",e);}
   });
   it(`runs log query`,(done) => {
     const logQuery:WinstonQueryOpts = {
@@ -62,7 +62,7 @@ export const obaCoreLoggerFileInitTests = () => J.utils.desc("AM Logger Init (Fi
     try {
       const cb = (e:Error,results:any) => {
         if(e){
-          console.error(e);
+          OB.here("e",e);
           throw e;
         }
         else {
@@ -70,7 +70,7 @@ export const obaCoreLoggerFileInitTests = () => J.utils.desc("AM Logger Init (Fi
           J.is(results.file);
           J.arr(results.file);
           J.gt(results.file.length,0);
-          console.info(results.file.map((m:any) => {
+          OB.here("i",results.file.map((m:any) => {
             let m_:any;
             try{m_ = JSON.parse(m);}
             catch(e){m_ = m;};
@@ -81,7 +81,7 @@ export const obaCoreLoggerFileInitTests = () => J.utils.desc("AM Logger Init (Fi
       };
       core.logger.file.query(logQuery,cb);
     }
-    catch(e){console.error(e);}
+    catch(e){OB.here("e",e);}
   });
   it(`print component`,async () => {core.logger.print()},1E9);
 });
