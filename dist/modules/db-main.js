@@ -46,20 +46,20 @@ class OBACoreDB extends oba_common_1.Component {
             for (const k in connections) {
                 const name = k, uri = connections[k];
                 const dbStr = `-> ${name.toLocaleUpperCase()} @ ${uri}`;
-                oba_common_1.default.here("t", `Attempting to connect ${dbStr}`);
+                oba_common_1.default.trace(`Attempting to connect ${dbStr}`);
                 try {
                     const connection = yield mongoose_1.default.createConnection(uri, opts).asPromise();
-                    this.connections[name] = { uri, conn: connection };
-                    oba_common_1.default.here("k", `MongoDB connected -> ${dbStr}`);
+                    this.connections[name] = { uri, connection };
+                    oba_common_1.default.ok(`MongoDB connected ${dbStr}`);
                 }
                 catch (e) {
                     this.connections[name] = null;
-                    oba_common_1.default.here("w", `MongoDB connection failed -> ${e.message || e}`);
+                    oba_common_1.default.warn(`MongoDB connection failed -> ${e.message || e}`);
                 }
             }
         });
         this.shutdown = () => __awaiter(this, void 0, void 0, function* () { for (const k in this.connections) {
-            yield this.connections[k].conn.close();
+            yield this.connections[k].connection.close();
         } });
         this.startNative = (name, uri, opts) => __awaiter(this, void 0, void 0, function* () {
             try {
@@ -67,11 +67,11 @@ class OBACoreDB extends oba_common_1.Component {
                 return connection.db(name);
             }
             catch (e) {
-                oba_common_1.default.here("e", `DB Error: ${e}`);
+                oba_common_1.default.error(`DB Error: ${e}`);
             }
         });
         this.model = (dbName, modelName, schema, collection) => __awaiter(this, void 0, void 0, function* () {
-            const db = this.get(dbName).conn;
+            const db = this.get(dbName).connection;
             const model = db.model(modelName, schema, collection);
             yield model.init();
             return model;

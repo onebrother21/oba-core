@@ -4,7 +4,7 @@ import {Enum,Strings} from "@onebro/oba-common";
 export type DBConnectionOpts =
 Enum<boolean,undefined,"autoIndex"|"useUnifiedTopology"|"useNewUrlParser"> &
 Enum<number,undefined,"maxPoolSize"|"serverSelectionTimeoutMS"|"socketTimeoutMS"|"family">;
-export type DBConnection = {uri:string;conn:Connection;};
+export type DBConnection = {uri:string;connection:Connection;};
 export type DBConnections = Enum<DBConnection>;
 
 

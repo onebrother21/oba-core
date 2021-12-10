@@ -1,5 +1,5 @@
-import {J} from "./utils";
 import {allTests} from "./tests";
+import * as OB from "@onebro/oba-common";
 
-J.utils.clear();
+OB.clear();
 allTests();

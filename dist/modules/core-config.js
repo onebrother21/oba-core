@@ -7,7 +7,6 @@ exports.coreConfig = void 0;
 const oba_common_1 = __importDefault(require("@onebro/oba-common"));
 const oba_core_base_api_1 = require("@onebro/oba-core-base-api");
 const setDefaultConfigWithEnvironment = (prefix) => {
-    //const initial:OBACoreConfig = config.get("appconfig");
     const base = (0, oba_core_base_api_1.coreBaseConfig)(prefix);
     const { name, env } = base.vars;
     let dbVar = "_MONGODB";
@@ -20,7 +19,7 @@ const setDefaultConfigWithEnvironment = (prefix) => {
             dbVar += "_LOCAL";
             break;
     }
-    const uri = oba_common_1.default.envvar(prefix, dbVar);
+    const uri = oba_common_1.default.evar(prefix, dbVar);
     const db = { connections: Object.assign({}, uri ? { [name]: uri } : {}) };
     const logger = { label: name };
     const atRuntime = { logger, db };

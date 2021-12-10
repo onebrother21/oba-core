@@ -3,7 +3,7 @@ import { Enum, Strings } from "@onebro/oba-common";
 export declare type DBConnectionOpts = Enum<boolean, undefined, "autoIndex" | "useUnifiedTopology" | "useNewUrlParser"> & Enum<number, undefined, "maxPoolSize" | "serverSelectionTimeoutMS" | "socketTimeoutMS" | "family">;
 export declare type DBConnection = {
     uri: string;
-    conn: Connection;
+    connection: Connection;
 };
 export declare type DBConnections = Enum<DBConnection>;
 export declare type OBACoreDBConfig = {
