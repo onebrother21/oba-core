@@ -29,7 +29,7 @@ export const J = {
   initApp:async (s:string) => {
     try{
       const c = coreConfig(s);
-      const dirname = path.join(__dirname,"/../../../logs");
+      const dirname = path.join(__dirname,"/../../logs");
       c.logger.file = c.logger.file.map(t => ({...t,dirname}));
       const db = c.db.connections[c.vars.name];
       c.logger.db = c.logger.db.map(t => ({...t,db}));

@@ -11,9 +11,9 @@ const setDefaultConfigWithEnvironment = (prefix) => {
     const { name, env } = base.vars;
     let dbVar = "_MONGODB";
     switch (true) {
-        case env === "production":
-        case (/live-db/i.test(env)):
-            dbVar += "_PROD";
+        case env === "production": dbVar += "_PROD";
+        case oba_common_1.default.match(/live-db/, env):
+            dbVar += "_LOCAL_LIVE";
             break;
         default:
             dbVar += "_LOCAL";
@@ -24,6 +24,7 @@ const setDefaultConfigWithEnvironment = (prefix) => {
     const logger = { label: name };
     const atRuntime = { logger, db };
     const coreConfig = oba_common_1.default.mergeObj(base, atRuntime);
+    oba_common_1.default.info(coreConfig);
     return coreConfig;
 };
 exports.coreConfig = setDefaultConfigWithEnvironment;

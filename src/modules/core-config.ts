@@ -8,8 +8,8 @@ const setDefaultConfigWithEnvironment = (prefix:string):OBACoreConfig => {
   const {name,env} = base.vars;
   let dbVar = "_MONGODB";
   switch(true){
-    case env === "production":
-    case (/live-db/i.test(env)):dbVar += "_PROD";break;
+    case env === "production":dbVar += "_PROD";
+    case OB.match(/live-db/,env):dbVar += "_LOCAL_LIVE";break;
     default:dbVar += "_LOCAL";break;
   }
   const uri = OB.evar(prefix,dbVar);
@@ -17,6 +17,7 @@ const setDefaultConfigWithEnvironment = (prefix:string):OBACoreConfig => {
   const logger = {label:name} as any;
   const atRuntime:DeepPartial<OBACoreConfig> = {logger,db};
   const coreConfig = OB.mergeObj(base,atRuntime) as OBACoreConfig;
+  OB.info(coreConfig);
   return coreConfig;
 };
 export {setDefaultConfigWithEnvironment as coreConfig};
