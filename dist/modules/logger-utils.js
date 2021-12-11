@@ -39,7 +39,7 @@ const makeFileTransport = (o) => new winston_1.transports.File({
     format: (0, exports.levelGuard)(o.level),
     filename: path_1.default.join(o.dirname, `/${o.level}.log`),
     level: o.level,
-    handleExceptions: o.level == "error" || o.level == "critical"
+    handleExceptions: o.level == "error" || o.level == "crit"
 });
 exports.makeFileTransport = makeFileTransport;
 const makeMongoDbTransport = (o) => new winston_mongodb_1.MongoDB(o);

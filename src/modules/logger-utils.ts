@@ -22,7 +22,7 @@ export const makeFileTransport = (o:WinstonTransportFileConfig) => new transport
   format:levelGuard(o.level),
   filename:path.join(o.dirname,`/${o.level}.log`),
   level:o.level,
-  handleExceptions:o.level == "error"||o.level == "critical"
+  handleExceptions:o.level == "error"||o.level == "crit"
 });
 export const makeMongoDbTransport = (o:WinstonTransportMongoDbConfig) => new MongoDB(o);
 export const makeLogger = <T extends "file"|"db">(
