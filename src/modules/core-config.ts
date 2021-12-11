@@ -17,7 +17,6 @@ const setDefaultConfigWithEnvironment = (prefix:string):OBACoreConfig => {
   const logger = {label:name} as any;
   const atRuntime:DeepPartial<OBACoreConfig> = {logger,db};
   const coreConfig = OB.mergeObj(base,atRuntime) as OBACoreConfig;
-  OB.info(coreConfig);
   return coreConfig;
 };
 export {setDefaultConfigWithEnvironment as coreConfig};

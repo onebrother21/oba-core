@@ -24,7 +24,6 @@ const setDefaultConfigWithEnvironment = (prefix) => {
     const logger = { label: name };
     const atRuntime = { logger, db };
     const coreConfig = oba_common_1.default.mergeObj(base, atRuntime);
-    oba_common_1.default.info(coreConfig);
     return coreConfig;
 };
 exports.coreConfig = setDefaultConfigWithEnvironment;
