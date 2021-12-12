@@ -34,7 +34,7 @@
       "db":[
         {
           "level":"info",
-          "collection":"oba_core_api_logs",
+          "collection":"oba_core_api_log",
           "options":{"useUnifiedTopology":true},
           "metaKey":"meta",
           "decolorize":true,

@@ -8,8 +8,8 @@ const setDefaultConfigWithEnvironment = (prefix:string):OBACoreConfig => {
   const {name,env} = base.vars;
   let dbVar = "_MONGODB";
   switch(true){
-    case env === "production":dbVar += "_PROD";
-    case OB.match(/live-db/,env):dbVar += "_LOCAL_LIVE";break;
+    case env === "production":dbVar += "_PROD";break;
+    case OB.match(/LIVE/,env):dbVar += "_LIVE";break;
     default:dbVar += "_LOCAL";break;
   }
   const uri = OB.evar(prefix,dbVar);

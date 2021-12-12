@@ -25,8 +25,8 @@ export const obaCoreDBInitTests = () => J.desc("AM DB Init",() => {
       J.true(core.db.get(core.vars.name));
     },1E9);
     it(`has "model" method`,async () => {
-      model = await core.db.model(core.vars.name,"TestModel",schema,"testmodels");
-      J.prop(core.db.get(core.vars.name).connection.models,"TestModel");
+      model = await core.db.model(core.vars.name,"OBA_Core_Model",schema,"oba_core_models");
+      J.prop(core.db.get(core.vars.name).connection.models,"OBA_Core_Model");
     },1E9);
     it(`print component`,async () => {core.db.print()},1E9);
   });

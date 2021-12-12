@@ -11,9 +11,11 @@ const setDefaultConfigWithEnvironment = (prefix) => {
     const { name, env } = base.vars;
     let dbVar = "_MONGODB";
     switch (true) {
-        case env === "production": dbVar += "_PROD";
-        case oba_common_1.default.match(/live-db/, env):
-            dbVar += "_LOCAL_LIVE";
+        case env === "production":
+            dbVar += "_PROD";
+            break;
+        case oba_common_1.default.match(/LIVE/, env):
+            dbVar += "_LIVE";
             break;
         default:
             dbVar += "_LOCAL";
