@@ -1,6 +1,6 @@
 import {J} from "../utils";
 import {allCoreComponents} from "./components";
-import * as OB from "@onebro/oba-common";
+import OB from "@onebro/oba-common";
 
 export const init = () => J.desc("INIT",() => {
   it("Init",async () => {await J.refreshDb();},1E9);
@@ -8,7 +8,7 @@ export const init = () => J.desc("INIT",() => {
 export const finalCheck = () => J.desc("INIT CORE",() => {
   it("Final Init Core Api",async () => {
     const {core} = await J.initApp("OBA_CORE");
-    core.print();
+    //core.print();
   },1E9);
 });
 export const wrapup = () => J.desc("WRAPUP",() => {

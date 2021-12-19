@@ -1,4 +1,4 @@
-import fs from "fs";
+import OB, { AnyObj } from "@onebro/oba-common";
 import path from "path";
 import winston,{LogEntry,transports,format} from "winston";
 import {MongoDB} from "winston-mongodb";
@@ -6,17 +6,23 @@ import {
   WinstonTransportFileConfig,
   WinstonTransportMongoDbConfig,
 } from "./logger-types";
-import { AppError } from "@onebro/oba-common";
 
 const {combine,label,timestamp,printf,errors,json} = format;
 export const levels = {crit:0,error:1,warn:2,info:3,access:4,debug:5};
 export const levelGuard = (level:string) => format(info => info.level === level?info:null)();
-export const printMsg = (m:LogEntry) => JSON.stringify({
+export const printMsg = (m:LogEntry) => {
+  let msg:string|AnyObj ;
+  try{msg = JSON.parse(m.message);}
+  catch(e){msg = m.message;}
+  const filetrans = OB.obj(msg) && !m.meta;
+  const dbtrans = OB.str(msg) && m.meta;
+  return JSON.stringify({
   time:m.timestamp,
   label:m.label,
-  level:m.level,
-  ...JSON.parse(m.message),
-});
+  level:m.level.toLocaleUpperCase(),
+  ...filetrans?{meta:msg as AnyObj}:null,
+  ...dbtrans?{message:msg as string}:null,
+});};
 export const makeFormat = (name:string) => combine(label({label:name}),timestamp(),errors({stack:true}),printf(printMsg));
 export const makeFileTransport = (o:WinstonTransportFileConfig) => new transports.File({
   format:levelGuard(o.level),
@@ -34,21 +40,3 @@ export const makeLogger = <T extends "file"|"db">(
   transports:o.map(t => type == "file"?makeFileTransport(t as any):makeMongoDbTransport({...t,label} as any)),
   exitOnError:false,
 });
-export const makeDir = (path:string) => fs.existsSync(path)||fs.mkdirSync(path);
-export const makeLogMsg = (e:AppError|any) => {
-  switch(true){
-    case e instanceof Error:{
-      return JSON.stringify({
-        name:e.name,
-        message:e.message,
-        warning:!!e.warning,
-        status:e.status,
-        code:e.code?e.code.toString():"-",
-        info:e.info||{},
-        errors:e.errors||{},
-        stack:e.stack,
-      });
-    }
-    default:return JSON.stringify(e);
-  }
-};

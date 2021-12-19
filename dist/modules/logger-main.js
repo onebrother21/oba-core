@@ -8,29 +8,52 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OBACoreLogger = void 0;
-const logger_utils_1 = require("./logger-utils");
+const fs_1 = __importDefault(require("fs"));
 const oba_common_1 = require("@onebro/oba-common");
+const logger_utils_1 = require("./logger-utils");
+const logger_db_custom_1 = require("./logger-db-custom");
 class OBACoreLogger extends oba_common_1.Component {
     constructor() {
         super(...arguments);
-        this.init = () => __awaiter(this, void 0, void 0, function* () {
-            const { label, file, db } = this.config;
-            this.getMsg = logger_utils_1.makeLogMsg;
-            this.makeDir = logger_utils_1.makeDir;
-            if (file && file.length) {
-                const firstTrans = file[0];
+        this.createFileLogger = () => __awaiter(this, void 0, void 0, function* () {
+            const { label, file: opts } = this.config;
+            if (opts && opts.length) {
+                const firstTrans = opts[0];
                 const dirname = (firstTrans === null || firstTrans === void 0 ? void 0 : firstTrans.dirname) || null;
                 firstTrans ? this.makeDir(dirname) : null;
-                const logger = (0, logger_utils_1.makeLogger)(label, "file", file);
+                const logger = (0, logger_utils_1.makeLogger)(label, "file", opts);
                 this.file = logger;
             }
-            if (db && db.length) {
-                const logger = (0, logger_utils_1.makeLogger)(label, "db", db);
+        });
+        this.createDBLogger = (db) => __awaiter(this, void 0, void 0, function* () {
+            const { label, db: opts } = this.config;
+            if (opts && opts.length && db) {
+                const promise = () => __awaiter(this, void 0, void 0, function* () { return db.connection.getClient(); });
+                for (let i = 0, l = opts.length; i < l; i++)
+                    opts[i].db = promise();
+                const logger = (0, logger_utils_1.makeLogger)(label, "db", opts);
                 this.db = logger;
             }
         });
+        this.createDBCustomLogger = (db) => __awaiter(this, void 0, void 0, function* () {
+            const { label, dbCustom: opts } = this.config;
+            if (opts && opts.length && db) {
+                const logger = new logger_db_custom_1.OBACoreLoggerDbCustomWrapper(label, opts);
+                yield logger.init(db);
+                this.dbCustom = logger;
+            }
+        });
+        this.init = (db) => __awaiter(this, void 0, void 0, function* () {
+            yield this.createFileLogger();
+            yield this.createDBLogger(db);
+            yield this.createDBCustomLogger(db);
+        });
+        this.makeDir = (path) => fs_1.default.existsSync(path) || fs_1.default.mkdirSync(path);
     }
 }
 exports.OBACoreLogger = OBACoreLogger;

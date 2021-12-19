@@ -1,6 +1,8 @@
 import winston from "winston";
-import { AppError,Enum,Info,Keys } from "@onebro/oba-common";
-import { DBConnectionOpts } from "./db-types";
+import { MongoClient } from "mongodb";
+import { Enum,Info,Keys } from "@onebro/oba-common";
+import { ConnectionOpts } from "./db-types";
+import { OBACoreLoggerDbCustomWrapper } from "./logger-db-custom";
 
 export type WinstonQueryOpts = winston.QueryOptions;
 export type WinstonQuery = (o:WinstonQueryOpts,cb:(e:Error,results:any) => void) => any;
@@ -16,9 +18,9 @@ export type WinstonTransportConfig = {level:string;};
 export type WinstonTransportFileConfig = WinstonTransportConfig & {dirname:string;};
 export type WinstonTransportMongoDbConfig = WinstonTransportConfig & {
   label:string;
-  db:string|Promise<any>;
+  db:string|Promise<MongoClient>;
   silent?:boolean;
-  options?:DBConnectionOpts;
+  options?:ConnectionOpts;
   collection?:string;
   decolorize?:boolean;
   tryReconnect?:boolean;
@@ -26,19 +28,25 @@ export type WinstonTransportMongoDbConfig = WinstonTransportConfig & {
   name?:string;
   expireAfterSeconds?:number;
 };
-export type LeveledDbLogFlag = `{"type":"${"ACCESS"|"ERROR"|"INFO"|"WARN"|"DEBUG"|"CRIT"}"}`;
+export type WinstonTransportCustomDbConfig = WinstonTransportConfig & {
+  name:string;
+  dateStub?:string;
+  capSize:number;
+};
+export type LeveledDbLogFlag = "ACCESS"|"ERROR"|"INFO"|"WARN"|"DEBUG"|"CRIT";
 export type LeveledDbLogMethod = (s:LeveledDbLogFlag,meta?:Info<"meta">) => Promise<LeveledDbLogMethod>;
 export type WinstonLoggerNoMethods = Omit<winston.Logger,Keys<WinstonLoggerLevels>>;
 export type WinstonLoggerFileType =  WinstonLoggerNoMethods & Enum<winston.LeveledLogMethod,Keys<WinstonLoggerLevels>>;
 export type WinstonLoggerDBType =  WinstonLoggerNoMethods & Enum<LeveledDbLogMethod,Keys<WinstonLoggerLevels>>;
-export type OBACoreLoggerConfig = {
+export type OBACoreLoggerConfigType = {
   label:string;
   file?:WinstonTransportFileConfig[];
   db?:WinstonTransportMongoDbConfig[];
+  dbCustom?:WinstonTransportCustomDbConfig[];
 };
 export type OBACoreLoggerType = {
   makeDir:(path:string) => true|void;
-  getMsg:(e:AppError|any) => string;
   file?:WinstonLoggerFileType;
   db?:WinstonLoggerDBType;
+  dbCustom?:OBACoreLoggerDbCustomWrapper;
 };

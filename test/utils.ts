@@ -31,9 +31,9 @@ export const J = {
       const c = coreConfig(s);
       const dirname = path.join(__dirname,"/../../logs");
       c.logger.file = c.logger.file.map(t => ({...t,dirname}));
-      const db = c.db.connections[c.vars.name];
+      const db = c.db.uri;
       c.logger.db = c.logger.db.map(t => ({...t,db}));
-      const core:OBACoreApi<null> = new OBACoreApi(c);
+      const core:OBACoreApi = new OBACoreApi(c);
       await core.init(1);
       return {core};}
     catch(e){console.error(e);throw e;}

@@ -40,27 +40,23 @@ mongoose_1.default.Promise = bluebird_1.default;
 class OBACoreDB extends oba_common_1.Component {
     constructor() {
         super(...arguments);
-        this.init = () => __awaiter(this, void 0, void 0, function* () {
-            this.connections = {};
-            const { connections, opts } = this.config;
-            for (const k in connections) {
-                const name = k, uri = connections[k];
+        this.init = (start) => __awaiter(this, void 0, void 0, function* () {
+            if (start) {
+                const { name, uri, opts } = this.config;
                 const dbStr = `-> ${name.toLocaleUpperCase()} @ ${uri}`;
                 oba_common_1.default.trace(`Attempting to connect ${dbStr}`);
                 try {
-                    const connection = yield mongoose_1.default.createConnection(uri, opts).asPromise();
-                    this.connections[name] = { uri, connection };
+                    this.connection = yield mongoose_1.default.createConnection(uri, opts).asPromise();
+                    Object.assign(this, this.config);
                     oba_common_1.default.ok(`MongoDB connected ${dbStr}`);
                 }
                 catch (e) {
-                    this.connections[name] = null;
+                    this.connection = null;
                     oba_common_1.default.warn(`MongoDB connection failed -> ${e.message || e}`);
                 }
             }
         });
-        this.shutdown = () => __awaiter(this, void 0, void 0, function* () { for (const k in this.connections) {
-            yield this.connections[k].connection.close();
-        } });
+        this.shutdown = () => __awaiter(this, void 0, void 0, function* () { return yield this.connection.close(); });
         this.startNative = (name, uri, opts) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const connection = yield mongodb_1.MongoClient.connect(uri, opts);
@@ -70,14 +66,14 @@ class OBACoreDB extends oba_common_1.Component {
                 oba_common_1.default.error(`DB Error: ${e}`);
             }
         });
-        this.model = (dbName, modelName, schema, collection) => __awaiter(this, void 0, void 0, function* () {
-            const db = this.get(dbName).connection;
+        this.model = (modelName, schema, collection) => __awaiter(this, void 0, void 0, function* () {
+            const db = this.get();
             const model = db.model(modelName, schema, collection);
             yield model.init();
             return model;
         });
     }
-    get(dbName) { return this.connections[dbName]; }
+    get() { return this.connection; }
 }
 exports.OBACoreDB = OBACoreDB;
 exports.default = OBACoreDB;

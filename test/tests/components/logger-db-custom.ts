@@ -2,22 +2,24 @@ import {J} from "../../utils";
 import OB,{AppError} from "@onebro/oba-common";
 import {OBACoreApi,coreConfig,WinstonQueryOpts} from "../../../src";
 
-export const obaCoreLoggerDbInitTests = () => J.desc("Core Logger (Db)",() => {
+export const obaCoreLoggerDbCustomInitTests = () => J.desc("Core Logger (Db Custom)",() => {
   let core:OBACoreApi;
   it("init",async () => {
     const c = coreConfig("OBA_CORE");
-    const db = c.db.uri;
-    c.logger.db = c.logger.db.map(t => ({...t,db}));
     c.logger.file = null;
-    c.logger.dbCustom = null;
+    c.logger.db = null;
     core = new OBACoreApi(c);
     await core.init(1);
     J.is(core);
     J.true(core.logger);
   });
-  it(`has db logger`,async () => {J.is(core.logger.db);});
-  it(`has logging methods`,async () => {J.is(core.logger.db.info);});
-  it(`has query method`,async () => J.is(core.logger.db.query));
+  it(`has db logger`,async () => {J.is(core.logger.dbCustom);});
+  it(`has logging methods`,async () => {
+    J.is(core.logger.dbCustom.access);
+    J.is(core.logger.dbCustom.error);
+    J.is(core.logger.dbCustom.info);
+  });
+  it(`has query method`,async () => J.is(core.logger.dbCustom.query));
   it(`log msg from error`,async () => {
     const meta = new AppError({
       name:"UserInputError",
@@ -27,9 +29,10 @@ export const obaCoreLoggerDbInitTests = () => J.desc("Core Logger (Db)",() => {
       stack:"...stacktraces here"
     }).json();
     try{
-      const dbLogger = core.logger.db.info;
-      const info = await dbLogger("ERROR",{meta});
+      const dbLogger = core.logger.dbCustom.error;
+      const info = await dbLogger(meta);
       J.is(info);
+      //OB.info(info);
     }
     catch(e){OB.error(e);}
   },1E9);
@@ -41,16 +44,17 @@ export const obaCoreLoggerDbInitTests = () => J.desc("Core Logger (Db)",() => {
       status:200,
     };
     try {
-      const dbLogger = core.logger.db.info;
-      const info = await dbLogger("ACCESS",{meta:r});
+      const dbLogger = core.logger.dbCustom.access;
+      const info = await dbLogger(r);
       J.is(info);
+      //OB.info(info);
     }
     catch(e){OB.error(e);}
   });
   it(`has log collection`,async () => {
     await OB.sleep(10);
     const connection = core.db.get();
-    const logName = core.config.logger.db[0].collection;
+    const logName = core.config.logger.dbCustom[0].name;
     const collections = connection && logName?await connection.db.listCollections().toArray():null;
     //OB.log(collections);
     //const hasCollection = isDbLogger && collection;

@@ -4,13 +4,14 @@ import path from "path";
 import OB,{AppError} from "@onebro/oba-common";
 import {OBACoreApi,coreConfig,WinstonQueryOpts} from "../../../src";
 
-export const obaCoreLoggerFileInitTests = () => J.desc("AM Logger Init (File)",() => {
-  let core:OBACoreApi<null>,logmsg:string;
+export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() => {
+  let core:OBACoreApi;
   it("init",async () => {
     const c = coreConfig("OBA_CORE");
     const dirname = path.join(__dirname,"/../../../logs");
     c.logger.file = c.logger.file.map(t => ({...t,dirname}));
     c.logger.db = null;
+    c.logger.dbCustom = null;
     core = new OBACoreApi(c);
     await core.init();
     J.is(core);
@@ -22,8 +23,6 @@ export const obaCoreLoggerFileInitTests = () => J.desc("AM Logger Init (File)",(
     J.is(core.logger.file.warn);
     J.is(core.logger.file.error);
     J.is(core.logger.file.info);
-    J.is(core.logger.file.crit);
-    J.is(core.logger.file.debug);
   });
   it(`has query method`,async () => J.is(core.logger.file.query));
   it(`has logs directory`,async () => {
@@ -31,21 +30,31 @@ export const obaCoreLoggerFileInitTests = () => J.desc("AM Logger Init (File)",(
     const hasDir = fs.existsSync(dirname);
     J.true(hasDir);
   });
-  it(`makes log msg from error`,async () => {
-    const e = new AppError({
+  it(`log msg from error`,async () => {
+    const meta = new AppError({
       name:"UserInputError",
       message:"That won\'t work fam",
       code:"WHOA",
       status:500,
       stack:"...stacktraces here",
-    });
-    logmsg = core.logger.getMsg(e);
-    J.is(logmsg);
-  });
-  it(`writes log msg to file`,async () => {
+    }).json();
     try {
       const errorLogger = core.logger.file.error;
-      const info = errorLogger(logmsg);
+      const info = await errorLogger(OB.stringify(meta));
+      J.is(info);
+    }
+    catch(e){OB.error(e);}
+  });
+  it(`log msg from req`,async () => {
+    const r = {
+      ip:"123.45.67.890",
+      method:"GET",
+      url:"/OB/A/123",
+      status:200,
+    };
+    try {
+      const accessLogger = core.logger.file.access;
+      const info = await accessLogger(OB.stringify(r));
       J.is(info);
     }
     catch(e){OB.error(e);}
@@ -57,7 +66,7 @@ export const obaCoreLoggerFileInitTests = () => J.desc("AM Logger Init (File)",(
       limit:10,
       start:0,
       order:"asc",
-      fields:["message"]
+      fields:["meta","time"]
     };
     try {
       const cb = (e:Error,results:any) => {
@@ -70,18 +79,19 @@ export const obaCoreLoggerFileInitTests = () => J.desc("AM Logger Init (File)",(
           J.is(results.file);
           J.arr(results.file);
           J.gt(results.file.length,0);
-          OB.info(results.file.map((m:any) => {
+          const R = results.file.map((m:any) => {
             let m_:any;
             try{m_ = JSON.parse(m);}
             catch(e){m_ = m;};
             return m_;
-          }));
+          });
+          //OB.info("query results",R);
         }
         done();
       };
       core.logger.file.query(logQuery,cb);
     }
     catch(e){OB.error(e);}
-  });
-  it(`print component`,async () => {core.logger.print()},1E9);
+  },1E9);
+  //it(`print component`,async () => {core.logger.print()},1E9);
 });

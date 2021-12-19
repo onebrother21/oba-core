@@ -22,8 +22,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeLogMsg = exports.makeDir = exports.makeLogger = exports.makeMongoDbTransport = exports.makeFileTransport = exports.makeFormat = exports.printMsg = exports.levelGuard = exports.levels = void 0;
-const fs_1 = __importDefault(require("fs"));
+exports.makeLogger = exports.makeMongoDbTransport = exports.makeFileTransport = exports.makeFormat = exports.printMsg = exports.levelGuard = exports.levels = void 0;
+const oba_common_1 = __importDefault(require("@onebro/oba-common"));
 const path_1 = __importDefault(require("path"));
 const winston_1 = __importStar(require("winston"));
 const winston_mongodb_1 = require("winston-mongodb");
@@ -31,7 +31,18 @@ const { combine, label, timestamp, printf, errors, json } = winston_1.format;
 exports.levels = { crit: 0, error: 1, warn: 2, info: 3, access: 4, debug: 5 };
 const levelGuard = (level) => (0, winston_1.format)(info => info.level === level ? info : null)();
 exports.levelGuard = levelGuard;
-const printMsg = (m) => JSON.stringify(Object.assign({ time: m.timestamp, label: m.label, level: m.level }, JSON.parse(m.message)));
+const printMsg = (m) => {
+    let msg;
+    try {
+        msg = JSON.parse(m.message);
+    }
+    catch (e) {
+        msg = m.message;
+    }
+    const filetrans = oba_common_1.default.obj(msg) && !m.meta;
+    const dbtrans = oba_common_1.default.str(msg) && m.meta;
+    return JSON.stringify(Object.assign(Object.assign({ time: m.timestamp, label: m.label, level: m.level.toLocaleUpperCase() }, filetrans ? { meta: msg } : null), dbtrans ? { message: msg } : null));
+};
 exports.printMsg = printMsg;
 const makeFormat = (name) => combine(label({ label: name }), timestamp(), errors({ stack: true }), printf(exports.printMsg));
 exports.makeFormat = makeFormat;
@@ -51,24 +62,4 @@ const makeLogger = (label, type, o) => winston_1.default.createLogger({
     exitOnError: false,
 });
 exports.makeLogger = makeLogger;
-const makeDir = (path) => fs_1.default.existsSync(path) || fs_1.default.mkdirSync(path);
-exports.makeDir = makeDir;
-const makeLogMsg = (e) => {
-    switch (true) {
-        case e instanceof Error: {
-            return JSON.stringify({
-                name: e.name,
-                message: e.message,
-                warning: !!e.warning,
-                status: e.status,
-                code: e.code ? e.code.toString() : "-",
-                info: e.info || {},
-                errors: e.errors || {},
-                stack: e.stack,
-            });
-        }
-        default: return JSON.stringify(e);
-    }
-};
-exports.makeLogMsg = makeLogMsg;
 //# sourceMappingURL=logger-utils.js.map

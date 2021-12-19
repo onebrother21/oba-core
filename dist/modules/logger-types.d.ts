@@ -1,6 +1,8 @@
 import winston from "winston";
-import { AppError, Enum, Info, Keys } from "@onebro/oba-common";
-import { DBConnectionOpts } from "./db-types";
+import { MongoClient } from "mongodb";
+import { Enum, Info, Keys } from "@onebro/oba-common";
+import { ConnectionOpts } from "./db-types";
+import { OBACoreLoggerDbCustomWrapper } from "./logger-db-custom";
 export declare type WinstonQueryOpts = winston.QueryOptions;
 export declare type WinstonQuery = (o: WinstonQueryOpts, cb: (e: Error, results: any) => void) => any;
 export declare type WinstonLoggerLevels = {
@@ -19,9 +21,9 @@ export declare type WinstonTransportFileConfig = WinstonTransportConfig & {
 };
 export declare type WinstonTransportMongoDbConfig = WinstonTransportConfig & {
     label: string;
-    db: string | Promise<any>;
+    db: string | Promise<MongoClient>;
     silent?: boolean;
-    options?: DBConnectionOpts;
+    options?: ConnectionOpts;
     collection?: string;
     decolorize?: boolean;
     tryReconnect?: boolean;
@@ -29,19 +31,25 @@ export declare type WinstonTransportMongoDbConfig = WinstonTransportConfig & {
     name?: string;
     expireAfterSeconds?: number;
 };
-export declare type LeveledDbLogFlag = `{"type":"${"ACCESS" | "ERROR" | "INFO" | "WARN" | "DEBUG" | "CRIT"}"}`;
+export declare type WinstonTransportCustomDbConfig = WinstonTransportConfig & {
+    name: string;
+    dateStub?: string;
+    capSize: number;
+};
+export declare type LeveledDbLogFlag = "ACCESS" | "ERROR" | "INFO" | "WARN" | "DEBUG" | "CRIT";
 export declare type LeveledDbLogMethod = (s: LeveledDbLogFlag, meta?: Info<"meta">) => Promise<LeveledDbLogMethod>;
 export declare type WinstonLoggerNoMethods = Omit<winston.Logger, Keys<WinstonLoggerLevels>>;
 export declare type WinstonLoggerFileType = WinstonLoggerNoMethods & Enum<winston.LeveledLogMethod, Keys<WinstonLoggerLevels>>;
 export declare type WinstonLoggerDBType = WinstonLoggerNoMethods & Enum<LeveledDbLogMethod, Keys<WinstonLoggerLevels>>;
-export declare type OBACoreLoggerConfig = {
+export declare type OBACoreLoggerConfigType = {
     label: string;
     file?: WinstonTransportFileConfig[];
     db?: WinstonTransportMongoDbConfig[];
+    dbCustom?: WinstonTransportCustomDbConfig[];
 };
 export declare type OBACoreLoggerType = {
     makeDir: (path: string) => true | void;
-    getMsg: (e: AppError | any) => string;
     file?: WinstonLoggerFileType;
     db?: WinstonLoggerDBType;
+    dbCustom?: OBACoreLoggerDbCustomWrapper;
 };

@@ -1,9 +1,11 @@
-import { OBACoreType, OBACoreConfig } from "./core-types";
+import { OBACoreErrorFactory } from "./error-factory-main";
+import { OBACoreType, OBACoreConfigType } from "./core-types";
 import { Component, AnyBoolean } from "@onebro/oba-common";
-export interface OBACoreApi<Ev> extends Component<OBACoreConfig, Ev>, OBACoreType<Ev> {
+export declare type OBACoreConfig = Partial<OBACoreConfigType>;
+export interface OBACoreApi<Ev = undefined> extends Component<OBACoreConfig, Ev>, OBACoreType {
 }
-export declare class OBACoreApi<Ev> extends Component<OBACoreConfig, Ev> {
-    get e(): import("@onebro/oba-core-base-api").OBACoreBaseErrorFactory<Ev>;
+export declare class OBACoreApi<Ev = undefined> extends Component<OBACoreConfig, Ev> {
+    get e(): OBACoreErrorFactory;
     get v(): OBACoreApi<Ev>["vars"];
     set v(vars: OBACoreApi<Ev>["vars"]);
     init: (startDb?: AnyBoolean) => Promise<void>;

@@ -1,16 +1,20 @@
-import OBACoreBaseApi,{OBACoreBaseConfig} from "@onebro/oba-core-base-api";
-import {OBACoreLogger} from "./logger-main";
-import {OBACoreDB} from "./db-main";
+import {OBACoreVars} from "./vars-types";
+import {OBACoreLogger,OBACoreLoggerConfig} from "./logger-main";
+import {OBACoreDB,OBACoreDBConfig} from "./db-main";
+import {OBACoreErrorFactory,OBACoreErrorFactoryConfig} from "./error-factory-main";
 
-import {OBACoreLoggerConfig} from "./logger-types";
-import {OBACoreDBConfig} from "./db-types";
 
-export type OBACoreConfigType = OBACoreBaseConfig & {
-  logger:OBACoreLoggerConfig;
+export type OBACoreConfigType = {
+  vars:OBACoreVars;
+  e:OBACoreErrorFactoryConfig;
+  errors:OBACoreErrorFactoryConfig;
   db:OBACoreDBConfig;
+  logger:OBACoreLoggerConfig;
 };
-export type OBACoreConfig = Partial<OBACoreConfigType>;
-export type OBACoreType<Ev> = Omit<OBACoreBaseApi<Ev>,"config"> & {
-  logger:OBACoreLogger<Ev>;
-  db:OBACoreDB<Ev>;
+export type OBACoreType = {
+  vars:OBACoreVars;
+  e:OBACoreErrorFactory;
+  errors:OBACoreErrorFactory;
+  db:OBACoreDB;
+  logger:OBACoreLogger;
 };

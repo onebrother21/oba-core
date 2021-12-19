@@ -18,14 +18,25 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OBACoreErrorFactory = void 0;
 const mongodb_1 = require("mongodb");
 const oba_common_1 = __importStar(require("@onebro/oba-common"));
-class OBACoreErrorFactory {
+class OBACoreErrorFactory extends oba_common_1.Component {
+    constructor() {
+        super(...arguments);
+        this.init = () => __awaiter(this, void 0, void 0, function* () { this._ = {}; for (const k in this.config)
+            this._[k] = this.make.bind(null, this.config[k], k); });
+    }
     format(e) { return new oba_common_1.AppError(e); }
     make(e, k, status, data) {
         const errCode = k.toLocaleUpperCase();
@@ -35,7 +46,7 @@ class OBACoreErrorFactory {
         const modified = Object.assign({}, e, {
             status: errStatus,
             code: errCode,
-            message: errMsg
+            message: errMsg,
         });
         return new oba_common_1.AppError(modified);
     }
@@ -43,12 +54,12 @@ class OBACoreErrorFactory {
         switch (true) {
             case oba_common_1.default.match(/authorized/i, e.name, e.message):
             case oba_common_1.default.match(/jsonwebtoken/i, e.name, e.message):
-            case oba_common_1.default.match(/jwt/i, e.name, e.message): return this.unauthorized("user");
-            case oba_common_1.default.match(/csrf/i, e.name, e.message): return this.csrf();
-            case oba_common_1.default.match(/cast/i, e.name, e.message): return this.castError();
-            case oba_common_1.default.match(/validation/i, e.name, e.message): return this.validation();
+            case oba_common_1.default.match(/jwt/i, e.name, e.message): return this._.unauthorized("user");
+            case oba_common_1.default.match(/csrf/i, e.name, e.message): return this._.csrf();
+            case oba_common_1.default.match(/cast/i, e.name, e.message): return this._.castError();
+            case oba_common_1.default.match(/validation/i, e.name, e.message): return this._.validation();
             case e instanceof mongodb_1.MongoServerError || oba_common_1.default.match(/mongo/i, e.name, e.message): return this.format(e);
-            default: return this.someError();
+            default: return this._.someError();
         }
     }
     map(e) {
@@ -57,10 +68,7 @@ class OBACoreErrorFactory {
         errObj.status = e.status || errObj.status;
         return new oba_common_1.AppError(errObj);
     }
-    constructor(config) { for (const k in config)
-        this[k] = this.make.bind(null, config[k], k); }
 }
 exports.OBACoreErrorFactory = OBACoreErrorFactory;
 exports.default = OBACoreErrorFactory;
-__exportStar(require("./error-factory-types"), exports);
 //# sourceMappingURL=error-factory-main.js.map
