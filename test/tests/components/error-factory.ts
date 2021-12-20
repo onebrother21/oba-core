@@ -43,19 +43,19 @@ export const obaCoreErrorFactoryInitTests = () => J.desc("Core Error Factory",()
   it("invalid data",async () => {
     const test = core.e._.invalid("api credentials");
     J.error(test);
-    J.is(test.status,422);
+    J.is(test.status,400);
     J.match(test.message,/invalid/i);
   });
   it("missing data",async () => {
     const test = core.e._.missing("handle");
     J.error(test);
-    J.is(test.status,422);
+    J.is(test.status,400);
     J.match(test.message,/missing/i);
   });
   it("data mismatch",async () => {
     const test = core.e._.mismatch("pin");
     J.error(test);
-    J.is(test.status,422);
+    J.is(test.status,400);
     J.match(test.message,/mismatch/i);
   });
   it("csrf",async () => {
@@ -67,13 +67,13 @@ export const obaCoreErrorFactoryInitTests = () => J.desc("Core Error Factory",()
   it("req validation",async () => {
     const test = core.e.map(new Error("ValidationErr"));
     J.error(test);
-    J.is(test.status,425);
+    J.is(test.status,400);
     J.match(test.message,/check data/i);
   });
   it("cast error",async () => {
     const test = core.e.map(new Error("castError"));
     J.error(test);
-    J.is(test.status,425);
+    J.is(test.status,422);
     J.match(test.message,/check data/i);
   });
   it("some random error",async () => {

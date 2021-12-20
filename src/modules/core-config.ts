@@ -3,16 +3,16 @@ import OB,{ DeepPartial } from "@onebro/oba-common";
 import { OBACoreConfig } from "./core-main";
 
 const setDefaultConfigWithEnvironment = (prefix:string):OBACoreConfig => {
-  const env = process.env.NODE_ENV.toLocaleUpperCase();
+  const env = OB.env().toLocaleUpperCase();
   const name = OB.evar(prefix,"_NAME");
-  const mode = OB.evar(prefix,"_MODE");
+  const mode = OB.mode();
   const version = OB.version();
-  const vars = {name,env,mode,version};//,envvars:process.env};
+  const vars = {name,env,mode,version};
   const initial:OBACoreConfig = config.get("appconfig");
   let dbVar = "_MONGODB";
-  switch(true){
-    case env === "production":dbVar += "_PROD";break;
-    case OB.match(/LIVE/,env):dbVar += "_LIVE";break;
+  if(!OB.evar(prefix,dbVar)) switch(true){
+    case OB.prod():dbVar += "_PROD";break;
+    case OB.match(/live/i,env):dbVar += "_LIVE";break;
     default:dbVar += "_LOCAL";break;
   }
   const uri = OB.evar(prefix,dbVar);

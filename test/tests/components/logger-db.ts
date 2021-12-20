@@ -14,10 +14,10 @@ export const obaCoreLoggerDbInitTests = () => J.desc("Core Logger (Db)",() => {
     await core.init(1);
     J.is(core);
     J.true(core.logger);
-  });
-  it(`has db logger`,async () => {J.is(core.logger.db);});
-  it(`has logging methods`,async () => {J.is(core.logger.db.info);});
-  it(`has query method`,async () => J.is(core.logger.db.query));
+  },1e9);
+  it(`has db logger`,async () => {J.is(core.logger.db);},1e9);
+  it(`has logging methods`,async () => {J.is(core.logger.db.info);},1e9);
+  it(`has query method`,async () => J.is(core.logger.db.query),1e9);
   it(`log msg from error`,async () => {
     const meta = new AppError({
       name:"UserInputError",

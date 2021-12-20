@@ -7,24 +7,25 @@ exports.coreConfig = void 0;
 const config_1 = __importDefault(require("config"));
 const oba_common_1 = __importDefault(require("@onebro/oba-common"));
 const setDefaultConfigWithEnvironment = (prefix) => {
-    const env = process.env.NODE_ENV.toLocaleUpperCase();
+    const env = oba_common_1.default.env().toLocaleUpperCase();
     const name = oba_common_1.default.evar(prefix, "_NAME");
-    const mode = oba_common_1.default.evar(prefix, "_MODE");
+    const mode = oba_common_1.default.mode();
     const version = oba_common_1.default.version();
-    const vars = { name, env, mode, version }; //,envvars:process.env};
+    const vars = { name, env, mode, version };
     const initial = config_1.default.get("appconfig");
     let dbVar = "_MONGODB";
-    switch (true) {
-        case env === "production":
-            dbVar += "_PROD";
-            break;
-        case oba_common_1.default.match(/LIVE/, env):
-            dbVar += "_LIVE";
-            break;
-        default:
-            dbVar += "_LOCAL";
-            break;
-    }
+    if (!oba_common_1.default.evar(prefix, dbVar))
+        switch (true) {
+            case oba_common_1.default.prod():
+                dbVar += "_PROD";
+                break;
+            case oba_common_1.default.match(/live/i, env):
+                dbVar += "_LIVE";
+                break;
+            default:
+                dbVar += "_LOCAL";
+                break;
+        }
     const uri = oba_common_1.default.evar(prefix, dbVar);
     const db = { uri, name };
     const logger = { label: name };

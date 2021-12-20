@@ -16,20 +16,20 @@ export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() =
     await core.init();
     J.is(core);
     J.true(core.logger);
-  });
-  it(`has file logger`,async () => J.is(core.logger.file));
+  },1e9);
+  it(`has file logger`,async () => J.is(core.logger.file),1e9);
   it(`has logging methods`,async () => {
     J.is(core.logger.file.access);
     J.is(core.logger.file.warn);
     J.is(core.logger.file.error);
     J.is(core.logger.file.info);
-  });
-  it(`has query method`,async () => J.is(core.logger.file.query));
+  },1e9);
+  it(`has query method`,async () => J.is(core.logger.file.query),1e9);
   it(`has logs directory`,async () => {
     const dirname = core.config.logger.file[0].dirname;
     const hasDir = fs.existsSync(dirname);
     J.true(hasDir);
-  });
+  },1e9);
   it(`log msg from error`,async () => {
     const meta = new AppError({
       name:"UserInputError",
@@ -44,7 +44,7 @@ export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() =
       J.is(info);
     }
     catch(e){OB.error(e);}
-  });
+  },1e9);
   it(`log msg from req`,async () => {
     const r = {
       ip:"123.45.67.890",
@@ -58,7 +58,7 @@ export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() =
       J.is(info);
     }
     catch(e){OB.error(e);}
-  });
+  },1e9);
   it(`runs log query`,(done) => {
     const logQuery:WinstonQueryOpts = {
       from:new Date(new Date().getTime() - 24 * 60 * 60 * 1000),

@@ -1,8 +1,3 @@
-import { Controller } from "@onebro/oba-common";
-import mongoose from "mongoose";
-import path from "path";
-import OBACoreApi,{coreConfig} from "../src";
-
 export const J = {
   desc:describe,
   type:(a:any,b:string) => expect(typeof a).toBe(b),
@@ -22,20 +17,4 @@ export const J = {
   doesNotThrow:(o:Function) => expect(o()).not.toThrow(),
   error:(o:any) => expect(o).toBeInstanceOf(Error),
   noterror:(o:any) => expect(o).not.toBeInstanceOf(Error),
-  refreshDb:async () => {
-    const db = await mongoose.createConnection("mongodb://localhost:27017/oba-dev").asPromise();
-    await db.dropDatabase();
-  },
-  initApp:async (s:string) => {
-    try{
-      const c = coreConfig(s);
-      const dirname = path.join(__dirname,"/../../logs");
-      c.logger.file = c.logger.file.map(t => ({...t,dirname}));
-      const db = c.db.uri;
-      c.logger.db = c.logger.db.map(t => ({...t,db}));
-      const core:OBACoreApi = new OBACoreApi(c);
-      await core.init(1);
-      return {core};}
-    catch(e){console.error(e);throw e;}
-  },
 };

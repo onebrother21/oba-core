@@ -12,14 +12,14 @@ export const obaCoreLoggerDbCustomInitTests = () => J.desc("Core Logger (Db Cust
     await core.init(1);
     J.is(core);
     J.true(core.logger);
-  });
-  it(`has db logger`,async () => {J.is(core.logger.dbCustom);});
+  },1e9);
+  it(`has db logger`,async () => {J.is(core.logger.dbCustom);},1e9);
   it(`has logging methods`,async () => {
     J.is(core.logger.dbCustom.access);
     J.is(core.logger.dbCustom.error);
     J.is(core.logger.dbCustom.info);
-  });
-  it(`has query method`,async () => J.is(core.logger.dbCustom.query));
+  },1e9);
+  it(`has query method`,async () => {J.is(core.logger.dbCustom.query);},1e9);
   it(`log msg from error`,async () => {
     const meta = new AppError({
       name:"UserInputError",
@@ -50,7 +50,7 @@ export const obaCoreLoggerDbCustomInitTests = () => J.desc("Core Logger (Db Cust
       //OB.info(info);
     }
     catch(e){OB.error(e);}
-  });
+  },1e9);
   it(`has log collection`,async () => {
     await OB.sleep(10);
     const connection = core.db.get();
