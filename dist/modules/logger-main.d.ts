@@ -9,6 +9,5 @@ export declare class OBACoreLogger extends Component<OBACoreLoggerConfig> {
     private createDBLogger;
     private createDBCustomLogger;
     init: (db?: OBACoreDB) => Promise<void>;
-    makeDir: (path: string) => true | void;
 }
 export default OBACoreLogger;

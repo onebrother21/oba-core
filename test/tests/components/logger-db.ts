@@ -24,29 +24,27 @@ export const obaCoreLoggerDbInitTests = () => J.desc("Core Logger (Db)",() => {
       message:"That won\'t work fam",
       code:"WHOA",
       status:500,
-      stack:"...stacktraces here"
+      stack:"...stacktraces here",
     }).json();
-    try{
-      const dbLogger = core.logger.db.info;
-      const info = await dbLogger("ERROR",{meta});
+    try {
+      const info = await core.logger.postLogMsg("error",OB.stringify(meta));
       J.is(info);
     }
     catch(e){OB.error(e);}
-  },1E9);
-  it(`log msg from req info`,async () => {
-    const r = {
+  },1e9);
+  it(`log msg from req`,async () => {
+    const meta = {
       ip:"123.45.67.890",
       method:"GET",
       url:"/OB/A/123",
       status:200,
     };
     try {
-      const dbLogger = core.logger.db.info;
-      const info = await dbLogger("ACCESS",{meta:r});
+      const info = await core.logger.postLogMsg("access",OB.stringify(meta));
       J.is(info);
     }
     catch(e){OB.error(e);}
-  });
+  },1e9);
   it(`has log collection`,async () => {
     await OB.sleep(10);
     const connection = core.db.get();
@@ -69,5 +67,5 @@ export const obaCoreLoggerDbInitTests = () => J.desc("Core Logger (Db)",() => {
     }
     catch(e){OB.error(e);throw e;}
   },1E9);
-  //it(`print component`,async () => {core.logger.print()},1E9);
+  it(`print component`,async () => {core.logger.print()},1E9);
 });

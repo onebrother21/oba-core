@@ -8,8 +8,8 @@ export const init = () => J.desc("INIT",() => {
 });
 export const finalCheck = () => J.desc("INIT CORE",() => {
   it("Final Init Core Api",async () => {
-    const {core} = await App.init(1);
-    core.print();
+    //const {core} = await App.init(1);
+    //core.print();
   },1E9);
 });
 export const wrapup = () => J.desc("WRAPUP",() => {

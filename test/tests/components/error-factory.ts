@@ -83,5 +83,5 @@ export const obaCoreErrorFactoryInitTests = () => J.desc("Core Error Factory",()
     J.match(test.message,/oops/i);
     J.match(test.info as any,/sdihfifhsoif/i);
   });
-  //it("print component",async () => {core.e.print();});
+  it("print component",async () => {core.e.print();});
 });

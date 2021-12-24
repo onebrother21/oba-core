@@ -14,9 +14,9 @@ export const App = {
     try{
       const c = coreConfig("OBA_CORE");
       const dirname = path.join(__dirname,"/../../logs");
-      c.logger.file = c.logger.file.map(t => ({...t,dirname}));
       const db = c.db.uri;
       c.logger.db = c.logger.db.map(t => ({...t,db}));
+      c.logger.file = c.logger.file.map(t => ({...t,dirname}));
       const core:OBACoreApi = new OBACoreApi(c);
       await core.init(startDb);
       return {core};

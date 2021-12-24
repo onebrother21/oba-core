@@ -6,8 +6,9 @@ const setDefaultConfigWithEnvironment = (prefix:string):OBACoreConfig => {
   const env = OB.env().toLocaleUpperCase();
   const name = OB.evar(prefix,"_NAME");
   const mode = OB.mode();
+  const verbose = OB.verbose();
   const version = OB.version();
-  const vars = {name,env,mode,version};
+  const vars = {name,env,mode,version,verbose};
   const initial:OBACoreConfig = config.get("appconfig");
   let dbVar = "_MONGODB";
   if(!OB.evar(prefix,dbVar)) switch(true){

@@ -8,12 +8,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OBACoreLogger = void 0;
-const fs_1 = __importDefault(require("fs"));
 const oba_common_1 = require("@onebro/oba-common");
 const logger_utils_1 = require("./logger-utils");
 const logger_db_custom_1 = require("./logger-db-custom");
@@ -49,11 +45,12 @@ class OBACoreLogger extends oba_common_1.Component {
             }
         });
         this.init = (db) => __awaiter(this, void 0, void 0, function* () {
+            this.makeDir = logger_utils_1.makeDir;
+            this.postLogMsg = logger_utils_1.postLogMsg.bind(null, this);
             yield this.createFileLogger();
             yield this.createDBLogger(db);
             yield this.createDBCustomLogger(db);
         });
-        this.makeDir = (path) => fs_1.default.existsSync(path) || fs_1.default.mkdirSync(path);
     }
 }
 exports.OBACoreLogger = OBACoreLogger;

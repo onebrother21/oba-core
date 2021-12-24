@@ -31,67 +31,56 @@ export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() =
     J.true(hasDir);
   },1e9);
   it(`log msg from error`,async () => {
-    const meta = new AppError({
+    const meta = OB.stringify(new AppError({
       name:"UserInputError",
       message:"That won\'t work fam",
       code:"WHOA",
       status:500,
       stack:"...stacktraces here",
-    }).json();
+    }).json());
     try {
-      const errorLogger = core.logger.file.error;
-      const info = await errorLogger(OB.stringify(meta));
+      const info = await core.logger.postLogMsg("error",meta);
       J.is(info);
     }
     catch(e){OB.error(e);}
   },1e9);
   it(`log msg from req`,async () => {
-    const r = {
+    const meta = OB.stringify({
       ip:"123.45.67.890",
       method:"GET",
       url:"/OB/A/123",
       status:200,
-    };
+    });
     try {
-      const accessLogger = core.logger.file.access;
-      const info = await accessLogger(OB.stringify(r));
+      const info = await core.logger.postLogMsg("access",meta);
       J.is(info);
     }
     catch(e){OB.error(e);}
   },1e9);
-  it(`runs log query`,(done) => {
-    const logQuery:WinstonQueryOpts = {
+  it(`runs log query`,async () => {
+    await OB.sleep(50);
+    const Q = core.logger.file.query.bind(core.logger.file);
+    const q:WinstonQueryOpts = {
       from:new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
       until:new Date(),
       limit:10,
       start:0,
       order:"asc",
-      fields:["meta","time"]
+      fields:["time"]
     };
-    try {
-      const cb = (e:Error,results:any) => {
-        if(e){
-          OB.error(e);
-          throw e;
-        }
-        else {
-          J.is(results);
-          J.is(results.file);
-          J.arr(results.file);
-          J.gt(results.file.length,0);
-          const R = results.file.map((m:any) => {
-            let m_:any;
-            try{m_ = JSON.parse(m);}
-            catch(e){m_ = m;};
-            return m_;
-          });
-          //OB.info("query results",R);
-        }
-        done();
-      };
-      core.logger.file.query(logQuery,cb);
-    }
-    catch(e){OB.error(e);}
+    const cb = (done:Function,fail:Function,e:Error,results:any) => e?fail(e):done(results);
+    const results:{file?:any[];} = await new Promise((done,fail) => {Q(q,cb.bind(null,done,fail));});
+    J.is(results);
+    J.is(results.file);
+    J.arr(results.file);
+    J.gt(results.file.length,0);
+    const R = results.file.map((m:any) => {
+      let m_:any;
+      try{m_ = JSON.parse(m);}
+      catch(e){m_ = m;};
+      return m_;
+    });
+    OB.info("query results",R);
   },1E9);
-  //it(`print component`,async () => {core.logger.print()},1E9);
+  it(`print component`,async () => {core.logger.print()},1E9);
 });

@@ -6,8 +6,8 @@ import {obaCoreLoggerDbInitTests} from "./logger-db";
 import {obaCoreLoggerDbCustomInitTests} from "./logger-db-custom";
 
 export const allCoreComponents = () => J.desc("CORE COMPONENTS TESTS",() => {
-  obaCoreErrorFactoryInitTests();
-  obaCoreDBInitTests();
+  //obaCoreErrorFactoryInitTests();
+  //obaCoreDBInitTests();
   obaCoreLoggerFileInitTests();
   obaCoreLoggerDbInitTests();
   obaCoreLoggerDbCustomInitTests();

@@ -1,20 +1,23 @@
 import winston from "winston";
 import { MongoClient } from "mongodb";
-import { Enum, Info, Keys } from "@onebro/oba-common";
+import { Enum, Info, Keys, Values } from "@onebro/oba-common";
 import { ConnectionOpts } from "./db-types";
 import { OBACoreLoggerDbCustomWrapper } from "./logger-db-custom";
 export declare type WinstonQueryOpts = winston.QueryOptions;
 export declare type WinstonQuery = (o: WinstonQueryOpts, cb: (e: Error, results: any) => void) => any;
 export declare type WinstonLoggerLevels = {
-    crit: number;
-    error: number;
-    warn: number;
-    info: number;
-    access: number;
-    debug: number;
+    crit: "CRIT";
+    error: "ERROR";
+    warn: "WARNING";
+    info: "INFO";
+    access: "ACCESS";
+    debug: "DEBUG";
 };
+export declare const WinstonLoggerLevels: WinstonLoggerLevels;
+export declare type WinstonLoggerLevel = Keys<WinstonLoggerLevels>;
+export declare type WinstonLoggerLevelFlag = Values<WinstonLoggerLevels>;
 export declare type WinstonTransportConfig = {
-    level: string;
+    level: WinstonLoggerLevel;
 };
 export declare type WinstonTransportFileConfig = WinstonTransportConfig & {
     dirname: string;
@@ -36,20 +39,24 @@ export declare type WinstonTransportCustomDbConfig = WinstonTransportConfig & {
     dateStub?: string;
     capSize: number;
 };
-export declare type LeveledDbLogFlag = "ACCESS" | "ERROR" | "INFO" | "WARN" | "DEBUG" | "CRIT";
-export declare type LeveledDbLogMethod = (s: LeveledDbLogFlag, meta?: Info<"meta">) => Promise<LeveledDbLogMethod>;
-export declare type WinstonLoggerNoMethods = Omit<winston.Logger, Keys<WinstonLoggerLevels>>;
-export declare type WinstonLoggerFileType = WinstonLoggerNoMethods & Enum<winston.LeveledLogMethod, Keys<WinstonLoggerLevels>>;
-export declare type WinstonLoggerDBType = WinstonLoggerNoMethods & Enum<LeveledDbLogMethod, Keys<WinstonLoggerLevels>>;
-export declare type OBACoreLoggerConfigType = {
-    label: string;
+export declare type WinstonLoggerConfigs = {
     file?: WinstonTransportFileConfig[];
     db?: WinstonTransportMongoDbConfig[];
     dbCustom?: WinstonTransportCustomDbConfig[];
 };
-export declare type OBACoreLoggerType = {
-    makeDir: (path: string) => true | void;
+export declare type LogLevelDbMethod = (s: WinstonLoggerLevelFlag, meta?: Info<"meta">) => Promise<LogLevelDbMethod>;
+export declare type WinstonLoggerNoMethods = Omit<winston.Logger, WinstonLoggerLevel>;
+export declare type WinstonLoggerFileType = WinstonLoggerNoMethods & Enum<winston.LeveledLogMethod, WinstonLoggerLevel>;
+export declare type WinstonLoggerDBType = WinstonLoggerNoMethods & Enum<LogLevelDbMethod, WinstonLoggerLevel>;
+export declare type WinstonLoggerTypes = {
     file?: WinstonLoggerFileType;
     db?: WinstonLoggerDBType;
     dbCustom?: OBACoreLoggerDbCustomWrapper;
+};
+export declare type OBACoreLoggerConfigType = WinstonLoggerConfigs & {
+    label: string;
+};
+export declare type OBACoreLoggerType = WinstonLoggerTypes & {
+    makeDir: (path: string) => true | void;
+    postLogMsg: (k: WinstonLoggerLevel, msg: string) => Promise<any>;
 };

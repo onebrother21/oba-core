@@ -1,14 +1,13 @@
-import fs from "fs";
 import { Component } from "@onebro/oba-common";
-import { makeLogger } from "./logger-utils";
 import {
   OBACoreLoggerType,
   OBACoreLoggerConfigType,
   WinstonLoggerFileType,
   WinstonLoggerDBType,
 } from "./logger-types";
-import {OBACoreDB} from "./db-main";
+import { makeLogger,makeDir,postLogMsg } from "./logger-utils";
 import { OBACoreLoggerDbCustomWrapper } from "./logger-db-custom";
+import { OBACoreDB } from "./db-main";
 
 export type OBACoreLoggerConfig = OBACoreLoggerConfigType;
 export interface OBACoreLogger extends Component<OBACoreLoggerConfig>,OBACoreLoggerType {}
@@ -41,10 +40,11 @@ export class OBACoreLogger extends Component<OBACoreLoggerConfig> {
     }
   }
   init = async (db?:OBACoreDB) => {
+    this.makeDir = makeDir;
+    this.postLogMsg = postLogMsg.bind(null,this);
     await this.createFileLogger();
     await this.createDBLogger(db);
     await this.createDBCustomLogger(db);
   };
-  makeDir = (path:string) => fs.existsSync(path)||fs.mkdirSync(path);
 }
 export default OBACoreLogger;

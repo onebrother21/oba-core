@@ -10,8 +10,9 @@ const setDefaultConfigWithEnvironment = (prefix) => {
     const env = oba_common_1.default.env().toLocaleUpperCase();
     const name = oba_common_1.default.evar(prefix, "_NAME");
     const mode = oba_common_1.default.mode();
+    const verbose = oba_common_1.default.verbose();
     const version = oba_common_1.default.version();
-    const vars = { name, env, mode, version };
+    const vars = { name, env, mode, version, verbose };
     const initial = config_1.default.get("appconfig");
     let dbVar = "_MONGODB";
     if (!oba_common_1.default.evar(prefix, dbVar))

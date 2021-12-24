@@ -26,28 +26,24 @@ export const obaCoreLoggerDbCustomInitTests = () => J.desc("Core Logger (Db Cust
       message:"That won\'t work fam",
       code:"WHOA",
       status:500,
-      stack:"...stacktraces here"
+      stack:"...stacktraces here",
     }).json();
-    try{
-      const dbLogger = core.logger.dbCustom.error;
-      const info = await dbLogger(meta);
+    try {
+      const info = await core.logger.postLogMsg("error",OB.stringify(meta));
       J.is(info);
-      //OB.info(info);
     }
     catch(e){OB.error(e);}
-  },1E9);
-  it(`log msg from req info`,async () => {
-    const r = {
+  },1e9);
+  it(`log msg from req`,async () => {
+    const meta = {
       ip:"123.45.67.890",
       method:"GET",
       url:"/OB/A/123",
       status:200,
     };
     try {
-      const dbLogger = core.logger.dbCustom.access;
-      const info = await dbLogger(r);
+      const info = await core.logger.postLogMsg("access",OB.stringify(meta));
       J.is(info);
-      //OB.info(info);
     }
     catch(e){OB.error(e);}
   },1e9);
@@ -73,5 +69,5 @@ export const obaCoreLoggerDbCustomInitTests = () => J.desc("Core Logger (Db Cust
     }
     catch(e){OB.error(e);throw e;}
   },1E9);
-  //it(`print component`,async () => {core.logger.print()},1E9);
+  it(`print component`,async () => {core.logger.print()},1E9);
 });
