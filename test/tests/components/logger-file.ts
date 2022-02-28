@@ -37,7 +37,7 @@ export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() =
       code:"WHOA",
       status:500,
       stack:"...stacktraces here",
-    }).json());
+    }).json(1));
     try {
       const info = await core.logger.postLogMsg("error",meta);
       J.is(info);

@@ -27,7 +27,7 @@
     "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\""
   },
   "dependencies": {
-    "@onebro/oba-common": "^2.7.20",
+    "@onebro/oba-common": "^2.7.23",
     "@onebro/oba-core-base-api": "^2.7.18",
     "bluebird": "^3.7.2",
     "config": "^3.3.6",

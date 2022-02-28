@@ -4,19 +4,19 @@ import { OBACoreConfig } from "./core-main";
 
 const setDefaultConfigWithEnvironment = (prefix:string):OBACoreConfig => {
   const env = OB.env().toLocaleUpperCase();
-  const name = OB.evar(prefix,"_NAME");
+  const name = OB.getvar(prefix,"_NAME");
   const mode = OB.mode();
   const verbose = OB.verbose();
   const version = OB.version();
   const vars = {name,env,mode,version,verbose};
   const initial:OBACoreConfig = config.get("appconfig");
   let dbVar = "_MONGODB";
-  if(!OB.evar(prefix,dbVar)) switch(true){
-    case OB.prod():dbVar += "_PROD";break;
-    case OB.match(/live/i,env):dbVar += "_LIVE";break;
+  if(!OB.getvar(prefix,dbVar)) switch(true){
+    case OB.isEnv("prod"):dbVar += "_PROD";break;
+    case OB.isEnv("live"):dbVar += "_LIVE";break;
     default:dbVar += "_LOCAL";break;
   }
-  const uri = OB.evar(prefix,dbVar);
+  const uri = OB.getvar(prefix,dbVar);
   const db =  {uri,name};
   const logger = {label:name} as any;
   const atRuntime:DeepPartial<OBACoreConfig> = {vars,logger,db};
