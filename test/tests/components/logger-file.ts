@@ -59,28 +59,29 @@ export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() =
   },1e9);
   it(`runs log query`,async () => {
     await OB.sleep(50);
+    const aDayAgo = new Date().getTime() - 24 * 60 * 60 * 1000;
     const Q = core.logger.file.query.bind(core.logger.file);
     const q:WinstonQueryOpts = {
-      from:new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+      from:new Date(aDayAgo),
       until:new Date(),
       limit:10,
       start:0,
       order:"asc",
-      fields:["time"]
+      fields:["time","meta"]
     };
     const cb = (done:Function,fail:Function,e:Error,results:any) => e?fail(e):done(results);
-    const results:{file?:any[];} = await new Promise((done,fail) => {Q(q,cb.bind(null,done,fail));});
-    J.is(results);
-    J.is(results.file);
-    J.arr(results.file);
-    J.gt(results.file.length,0);
-    const R = results.file.map((m:any) => {
+    const results:{file?:any[];} = await new Promise((done,fail) => Q(q,cb.bind(null,done,fail)));
+    const R = results?.file?.map((m:any) => {
       let m_:any;
       try{m_ = JSON.parse(m);}
       catch(e){m_ = m;};
       return m_;
     });
     OB.info("query results",R);
+    J.is(results);
+    J.is(results.file);
+    J.arr(results.file);
+    J.gt(results.file.length,0);
   },1E9);
   it(`print component`,async () => {core.logger.print()},1E9);
 });
