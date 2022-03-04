@@ -15,7 +15,7 @@ export const obaCoreDBInitTests = () => J.desc("Core DB",() => {
   schema.virtual("other").get(function(){return this.name + "OtherShit"});
   J.desc("MongoDB Connection",() => {
     it("init",async () => {
-      const {db,vars} = coreConfig("OBA_CORE");
+      const {db,vars} = coreConfig();
       c = {db,vars};
       core = new OBACoreApi(c);
       await core.init(1);

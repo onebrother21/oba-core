@@ -5,14 +5,14 @@ import OBACoreApi,{coreConfig} from "../src";
 
 export const App = {
   refresh:async () => {
-    const c = coreConfig("OBA_CORE");
-    if(OB.match(/mongodb\+srv/,c.db.uri)) return;
-    const db = await mongoose.createConnection(c.db.uri).asPromise();
+    const {db:{uri,opts}} = coreConfig();
+    if(OB.match(/mongodb\+srv/,uri)) return;
+    const db = mongoose.createConnection(uri,opts);
     await db.dropDatabase();
   },
   init:async (startDb?:AnyBoolean) => {
     try{
-      const c = coreConfig("OBA_CORE");
+      const c = coreConfig();
       const dirname = path.join(__dirname,"/../../logs");
       const db = c.db.uri;
       c.logger.db = c.logger.db.map(t => ({...t,db}));

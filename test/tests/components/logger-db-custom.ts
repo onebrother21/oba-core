@@ -5,7 +5,7 @@ import {OBACoreApi,coreConfig,WinstonQueryOpts} from "../../../src";
 export const obaCoreLoggerDbCustomInitTests = () => J.desc("Core Logger (Db Custom)",() => {
   let core:OBACoreApi;
   it("init",async () => {
-    const c = coreConfig("OBA_CORE");
+    const c = coreConfig();
     c.logger.file = null;
     c.logger.db = null;
     core = new OBACoreApi(c);

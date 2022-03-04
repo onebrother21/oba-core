@@ -7,7 +7,7 @@ import {OBACoreApi,coreConfig,WinstonQueryOpts} from "../../../src";
 export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() => {
   let core:OBACoreApi;
   it("init",async () => {
-    const c = coreConfig("OBA_CORE");
+    const c = coreConfig();
     const dirname = path.join(__dirname,"/../../../logs");
     c.logger.file = c.logger.file.map(t => ({...t,dirname}));
     c.logger.db = null;

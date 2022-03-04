@@ -9,7 +9,7 @@ import OB from "@onebro/oba-common";
 export const obaCoreErrorFactoryInitTests = () => J.desc("Core Error Factory",() => {
   let core:OBACoreApi,c:OBACoreConfig;
   it("init",async () => {
-    const {errors} = coreConfig("OBA_CORE_");
+    const {errors} = coreConfig();
     c = {errors};
     core = new OBACoreApi(c);
     await core.init();
