@@ -26,7 +26,7 @@ export class OBACoreLogger extends Component<OBACoreLoggerConfig> {
     const {label,db:opts} = this.config;
     if(opts && opts.length && db){
       const promise = async () => db.connection.getClient();
-      for(let i = 0,l = opts.length;i<l;i++) opts[i].db = promise();
+      for(let i = 0,l = opts.length;i<l;i++) opts[i].db = promise() as any;
       const logger = makeLogger(label,"db",opts) as any;
       this.db = logger as WinstonLoggerDBType;
     }

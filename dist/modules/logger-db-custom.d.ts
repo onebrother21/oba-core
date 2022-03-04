@@ -1,3 +1,6 @@
+/// <reference types="mongoose/types/pipelinestage" />
+/// <reference types="mongoose/types/error" />
+/// <reference types="mongoose/types/connection" />
 import { Document, Model } from "mongoose";
 import { Keys, Enum, AppEntity } from "@onebro/oba-common";
 import { OBACoreDB } from "./db-main";
