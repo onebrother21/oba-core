@@ -12,9 +12,9 @@ const setDefaultConfigWithEnvironment = () => {
     const mode = oba_common_1.default.mode();
     const verbose = oba_common_1.default.verbose();
     const version = oba_common_1.default.version();
+    let dbVar = "_" + oba_common_1.default.appvar("_DBNAME");
     const vars = { name, env, mode, version, verbose };
     const initial = config_1.default.get("appconfig");
-    let dbVar = "_MONGODB";
     if (!oba_common_1.default.appvar(dbVar))
         switch (true) {
             case oba_common_1.default.isEnv("prod"):

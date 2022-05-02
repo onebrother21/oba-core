@@ -8,9 +8,9 @@ const setDefaultConfigWithEnvironment = ():OBACoreConfig => {
   const mode = OB.mode();
   const verbose = OB.verbose();
   const version = OB.version();
+  let dbVar = "_" + OB.appvar("_DBNAME");
   const vars = {name,env,mode,version,verbose};
   const initial:OBACoreConfig = config.get("appconfig");
-  let dbVar = "_MONGODB";
   if(!OB.appvar(dbVar)) switch(true){
     case OB.isEnv("prod"):dbVar += "_PROD";break;
     case OB.isEnv("live"):dbVar += "_LIVE";break;
