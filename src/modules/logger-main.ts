@@ -5,7 +5,7 @@ import {
   WinstonLoggerFileType,
   WinstonLoggerDBType,
 } from "./logger-types";
-import { makeLogger,makeDir,postLogMsg } from "./logger-utils";
+import { makeWinstonLogger,makeLocalDir,postLogMsg } from "./logger-utils";
 import { OBACoreLoggerDbCustomWrapper } from "./logger-db-custom";
 import { OBACoreDB } from "./db-main";
 
@@ -17,8 +17,8 @@ export class OBACoreLogger extends Component<OBACoreLoggerConfig> {
     if(opts && opts.length){
       const firstTrans = opts[0];
       const dirname = firstTrans?.dirname||null;
-      firstTrans?this.makeDir(dirname):null;
-      const logger = makeLogger(label,"file",opts) as any;
+      firstTrans?this.makeLocalDir(dirname):null;
+      const logger = makeWinstonLogger(label,"file",opts) as any;
       this.file = logger as WinstonLoggerFileType;
     }
   };
@@ -27,7 +27,7 @@ export class OBACoreLogger extends Component<OBACoreLoggerConfig> {
     if(opts && opts.length && db){
       const promise = async () => db.connection.getClient();
       for(let i = 0,l = opts.length;i<l;i++) opts[i].db = promise() as any;
-      const logger = makeLogger(label,"db",opts) as any;
+      const logger = makeWinstonLogger(label,"db",opts) as any;
       this.db = logger as WinstonLoggerDBType;
     }
   };
@@ -40,11 +40,13 @@ export class OBACoreLogger extends Component<OBACoreLoggerConfig> {
     }
   }
   init = async (db?:OBACoreDB) => {
-    this.makeDir = makeDir;
+    this.makeLocalDir = makeLocalDir;
     this.postLogMsg = postLogMsg.bind(null,this);
-    await this.createFileLogger();
-    await this.createDBLogger(db);
-    await this.createDBCustomLogger(db);
+    const {config} = this;
+    if(db && config.dbCustom) await this.createDBCustomLogger(db);
+    else if(db && config.db) this.createDBLogger(db);
+    else if(config.file) await this.createFileLogger();
+    else return;
   };
 }
 export default OBACoreLogger;

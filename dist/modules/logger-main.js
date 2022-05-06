@@ -21,8 +21,8 @@ class OBACoreLogger extends oba_common_1.Component {
             if (opts && opts.length) {
                 const firstTrans = opts[0];
                 const dirname = (firstTrans === null || firstTrans === void 0 ? void 0 : firstTrans.dirname) || null;
-                firstTrans ? this.makeDir(dirname) : null;
-                const logger = (0, logger_utils_1.makeLogger)(label, "file", opts);
+                firstTrans ? this.makeLocalDir(dirname) : null;
+                const logger = (0, logger_utils_1.makeWinstonLogger)(label, "file", opts);
                 this.file = logger;
             }
         });
@@ -32,7 +32,7 @@ class OBACoreLogger extends oba_common_1.Component {
                 const promise = () => __awaiter(this, void 0, void 0, function* () { return db.connection.getClient(); });
                 for (let i = 0, l = opts.length; i < l; i++)
                     opts[i].db = promise();
-                const logger = (0, logger_utils_1.makeLogger)(label, "db", opts);
+                const logger = (0, logger_utils_1.makeWinstonLogger)(label, "db", opts);
                 this.db = logger;
             }
         });
@@ -45,11 +45,17 @@ class OBACoreLogger extends oba_common_1.Component {
             }
         });
         this.init = (db) => __awaiter(this, void 0, void 0, function* () {
-            this.makeDir = logger_utils_1.makeDir;
+            this.makeLocalDir = logger_utils_1.makeLocalDir;
             this.postLogMsg = logger_utils_1.postLogMsg.bind(null, this);
-            yield this.createFileLogger();
-            yield this.createDBLogger(db);
-            yield this.createDBCustomLogger(db);
+            const { config } = this;
+            if (db && config.dbCustom)
+                yield this.createDBCustomLogger(db);
+            else if (db && config.db)
+                this.createDBLogger(db);
+            else if (config.file)
+                yield this.createFileLogger();
+            else
+                return;
         });
     }
 }

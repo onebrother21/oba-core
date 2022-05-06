@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.postLogMsg = exports.makeDir = exports.makeLogger = exports.makeMongoDbTransport = exports.makeFileTransport = exports.makeFormat = exports.printMsg = exports.levelGuard = exports.levels = void 0;
+exports.postLogMsg = exports.makeLocalDir = exports.makeWinstonLogger = exports.makeMongoDbTransport = exports.makeFileTransport = exports.makeFormat = exports.printMsg = exports.levelGuard = exports.levels = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const oba_common_1 = __importDefault(require("@onebro/oba-common"));
@@ -71,15 +71,15 @@ const makeFileTransport = (o) => new winston_1.transports.File({
 exports.makeFileTransport = makeFileTransport;
 const makeMongoDbTransport = (o) => new winston_mongodb_1.MongoDB(o);
 exports.makeMongoDbTransport = makeMongoDbTransport;
-const makeLogger = (label, type, o) => winston_1.default.createLogger({
+const makeWinstonLogger = (label, type, o) => winston_1.default.createLogger({
     levels: exports.levels,
     format: (0, exports.makeFormat)(label),
     transports: o.map(t => type == "file" ? (0, exports.makeFileTransport)(t) : (0, exports.makeMongoDbTransport)(Object.assign(Object.assign({}, t), { label }))),
     exitOnError: false,
 });
-exports.makeLogger = makeLogger;
-const makeDir = (path) => fs_1.default.existsSync(path) || fs_1.default.mkdirSync(path);
-exports.makeDir = makeDir;
+exports.makeWinstonLogger = makeWinstonLogger;
+const makeLocalDir = (path) => fs_1.default.existsSync(path) || fs_1.default.mkdirSync(path);
+exports.makeLocalDir = makeLocalDir;
 const postLogMsg = (logger, k, str) => __awaiter(void 0, void 0, void 0, function* () {
     const meta = JSON.parse(str);
     const flag = logger_types_1.WinstonLoggerLevels[k];

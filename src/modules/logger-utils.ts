@@ -36,7 +36,7 @@ export const makeFileTransport = (o:WinstonTransportFileConfig) => new transport
   handleExceptions:o.level == "error"||o.level == "crit"
 });
 export const makeMongoDbTransport = (o:WinstonTransportMongoDbConfig) => new MongoDB(o);
-export const makeLogger = <T extends "file"|"db">(
+export const makeWinstonLogger = <T extends "file"|"db">(
   label:string,
   type:T,
   o:(WinstonTransportFileConfig|WinstonTransportMongoDbConfig)[]) => winston.createLogger({
@@ -45,7 +45,7 @@ export const makeLogger = <T extends "file"|"db">(
   transports:o.map(t => type == "file"?makeFileTransport(t as any):makeMongoDbTransport({...t,label} as any)),
   exitOnError:false,
 });
-export const makeDir = (path:string) => fs.existsSync(path)||fs.mkdirSync(path);
+export const makeLocalDir = (path:string) => fs.existsSync(path)||fs.mkdirSync(path);
 export const postLogMsg = async (logger:OBACoreLoggerType,k:WinstonLoggerLevel,str:string):Promise<any> => {
   const meta = JSON.parse(str);
   const flag = WinstonLoggerLevels[k];

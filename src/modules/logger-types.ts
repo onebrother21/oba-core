@@ -61,6 +61,6 @@ export type WinstonLoggerTypes = {
 
 export type OBACoreLoggerConfigType = WinstonLoggerConfigs & {label:string;};
 export type OBACoreLoggerType =  WinstonLoggerTypes & {
-  makeDir:(path:string) => true|void;
+  makeLocalDir:(path:string) => true|void;
   postLogMsg:(k:WinstonLoggerLevel,msg:string) => Promise<any>;
 };
