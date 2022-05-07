@@ -18,12 +18,10 @@ export const levels = {crit:0,error:1,warn:2,info:3,access:4,debug:5};
 export const levelGuard = (level:string) => format(info => info.level === level?info:null)();
 export const printMsg = (m:LogEntry) => {
   const {message,label,level,time,meta} = m;
-  let msg:string|AnyObj ;
-  try{msg = JSON.parse(message);}
-  catch(e){msg = message;}
+  const msg:string|AnyObj = OB.parse(message);
   const filetrans = OB.obj(msg) && !meta;
   const dbtrans = OB.str(msg) && meta;
-  return JSON.stringify({
+  return OB.stringify({
   time,label,level:m.level.toLocaleUpperCase(),
   ...filetrans?{meta:msg as AnyObj}:null,
   ...dbtrans?{message:msg as string,meta}:null,

@@ -71,14 +71,9 @@ export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() =
     };
     const cb = (done:Function,fail:Function,e:Error,results:any) => e?fail(e):done(results);
     const resultsObj:{file?:any[];} = await new Promise((done,fail) => core.logger.file.query(q,cb.bind(null,done,fail)));
-    const {file:results} = resultsObj||{};
-     const R = results.map((m:any) => {
-      let m_:any;
-      try{m_ = JSON.parse(m);}
-      catch(e){m_ = m;};
-      return m_;
-    });
-    OB.info("query results",R);
+    const {file:results_} = resultsObj||{};
+    const results = results_.map((m:any) => OB.parse(m));
+    OB.info("query results",{results});
     J.is(results);
     J.arr(results);
     //J.gt(results.length,0);

@@ -48,16 +48,10 @@ const levelGuard = (level) => (0, winston_1.format)(info => info.level === level
 exports.levelGuard = levelGuard;
 const printMsg = (m) => {
     const { message, label, level, time, meta } = m;
-    let msg;
-    try {
-        msg = JSON.parse(message);
-    }
-    catch (e) {
-        msg = message;
-    }
+    const msg = oba_common_1.default.parse(message);
     const filetrans = oba_common_1.default.obj(msg) && !meta;
     const dbtrans = oba_common_1.default.str(msg) && meta;
-    return JSON.stringify(Object.assign(Object.assign({ time, label, level: m.level.toLocaleUpperCase() }, filetrans ? { meta: msg } : null), dbtrans ? { message: msg, meta } : null));
+    return oba_common_1.default.stringify(Object.assign(Object.assign({ time, label, level: m.level.toLocaleUpperCase() }, filetrans ? { meta: msg } : null), dbtrans ? { message: msg, meta } : null));
 };
 exports.printMsg = printMsg;
 const makeFormat = (name) => combine(label({ label: name }), timestamp({ "alias": "time" }), printf(exports.printMsg));
