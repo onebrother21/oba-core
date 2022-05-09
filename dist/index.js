@@ -16,5 +16,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const modules_1 = require("./modules");
 __exportStar(require("./modules"), exports);
-exports.default = modules_1.OBACoreApi;
+exports.default = modules_1.OBACore;
 //# sourceMappingURL=index.js.map

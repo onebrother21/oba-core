@@ -24,7 +24,7 @@ export class OBACoreDB extends Component<OBACoreDBConfig> {
         OB.warn(`MongoDB connection failed -> ${e.message||e}`);
       }
     }
-  }
+  };
   shutdown = async () => await this.connection.close();
   startNative = async (name:string,uri:string,opts:MongoClientOptions) => {
     try{

@@ -1,7 +1,7 @@
 import OB,{ AnyBoolean } from "@onebro/oba-common";
 import mongoose from "mongoose";
 import path from "path";
-import OBACoreApi,{coreConfig} from "../src";
+import OBACore,{coreConfig} from "../src";
 
 export const App = {
   refresh:async () => {
@@ -17,7 +17,7 @@ export const App = {
       const db = c.db.uri;
       //c.logger.db = c.logger.db.map(t => ({...t,db}));
       //c.logger.file = c.logger.file.map(t => ({...t,dirname}));
-      const core:OBACoreApi = new OBACoreApi(c);
+      const core:OBACore = new OBACore(c);
       await core.init(startDb);
       return {core};
     }

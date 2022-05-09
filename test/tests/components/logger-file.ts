@@ -2,17 +2,17 @@ import {J} from "../../utils";
 import fs from "fs";
 import path from "path";
 import OB,{AppError} from "@onebro/oba-common";
-import {OBACoreApi,coreConfig,WinstonQueryOpts} from "../../../src";
+import {OBACore,coreConfig,WinstonQueryOpts} from "../../../src";
 
 export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() => {
-  let core:OBACoreApi;
+  let core:OBACore;
   it("init",async () => {
     const c = coreConfig();
     const dirname = path.join(__dirname,"/../../../logs");
     c.logger.file = c.logger.file.map(t => ({...t,dirname}));
     c.logger.db = null;
     c.logger.dbCustom = null;
-    core = new OBACoreApi(c);
+    core = new OBACore(c);
     await core.init();
     J.is(core);
     J.true(core.logger);

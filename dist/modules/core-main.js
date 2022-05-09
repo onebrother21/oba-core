@@ -9,12 +9,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OBACoreApi = void 0;
+exports.OBACore = void 0;
 const logger_main_1 = require("./logger-main");
 const db_main_1 = require("./db-main");
 const error_factory_main_1 = require("./error-factory-main");
 const oba_common_1 = require("@onebro/oba-common");
-class OBACoreApi extends oba_common_1.Component {
+class OBACore extends oba_common_1.Component {
     constructor() {
         super(...arguments);
         this.init = (startDb) => __awaiter(this, void 0, void 0, function* () {
@@ -33,6 +33,6 @@ class OBACoreApi extends oba_common_1.Component {
     get v() { return this.vars; }
     set v(vars) { this.vars = vars; }
 }
-exports.OBACoreApi = OBACoreApi;
-exports.default = OBACoreApi;
+exports.OBACore = OBACore;
+exports.default = OBACore;
 //# sourceMappingURL=core-main.js.map

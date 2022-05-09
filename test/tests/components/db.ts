@@ -1,10 +1,10 @@
 import {J} from "../../utils";
 import {Schema} from "mongoose";
 import OB from "@onebro/oba-common";
-import {OBACoreApi,OBACoreConfig,coreConfig} from "../../../src";
+import {OBACore,OBACoreConfig,coreConfig} from "../../../src";
 
 export const obaCoreDBInitTests = () => J.desc("Core DB",() => {
-  let core:OBACoreApi,c:OBACoreConfig,
+  let core:OBACore,c:OBACoreConfig,
   model:any,id:any;
   const schema = new Schema({
     name:{type:String,unique:true,required:true,index:true},
@@ -17,7 +17,7 @@ export const obaCoreDBInitTests = () => J.desc("Core DB",() => {
     it("init",async () => {
       const {db,vars} = coreConfig();
       c = {db,vars};
-      core = new OBACoreApi(c);
+      core = new OBACore(c);
       await core.init(1);
       J.is(core);
       J.true(core.db);

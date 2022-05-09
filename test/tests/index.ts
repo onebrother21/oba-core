@@ -6,7 +6,7 @@ import OB from "@onebro/oba-common";
 export const init = () => J.desc("INIT",() => {
   it("Init",async () => {
     await App.refresh();
-    OB.ok("**tests started**")
+    OB.ok("**tests started**",OB.appEnvName(),OB.env())
   },1E9);
 });
 export const finalCheck = () => J.desc("INIT CORE",() => {

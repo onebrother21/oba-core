@@ -5,11 +5,11 @@ import {OBACoreType,OBACoreConfigType} from "./core-types";
 import {Component,AnyBoolean} from "@onebro/oba-common";
 
 export type OBACoreConfig = Partial<OBACoreConfigType>;
-export interface OBACoreApi<Ev = undefined> extends Component<OBACoreConfig,Ev>,OBACoreType {}
-export class OBACoreApi<Ev = undefined> extends Component<OBACoreConfig,Ev> {
+export interface OBACore<Ev = undefined> extends Component<OBACoreConfig,Ev>,OBACoreType {}
+export class OBACore<Ev = undefined> extends Component<OBACoreConfig,Ev> {
   get e(){return this.errors;}
   get v(){return this.vars;}
-  set v(vars:OBACoreApi<Ev>["vars"]){this.vars = vars;}
+  set v(vars:OBACore<Ev>["vars"]){this.vars = vars;}
   init = async (startDb?:AnyBoolean) => {
     const {config:{db,logger,e,errors,vars}} = this;
     this.vars = vars || null;
@@ -21,4 +21,4 @@ export class OBACoreApi<Ev = undefined> extends Component<OBACoreConfig,Ev> {
     await this.logger?.init(this.db);
   };
 }
-export default OBACoreApi;
+export default OBACore;

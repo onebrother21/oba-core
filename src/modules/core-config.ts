@@ -8,7 +8,7 @@ const setDefaultConfigWithEnvironment = ():OBACoreConfig => {
   const mode = OB.mode();
   const verbose = OB.verbose();
   const version = OB.version();
-  let dbVar = "_" + OB.appvar("_DBNAME");
+  let dbVar = "_" + OB.appvar("_DB");
   const vars = {name,env,mode,version,verbose};
   const initial:OBACoreConfig = config.get("appconfig");
   if(!OB.appvar(dbVar)) switch(true){

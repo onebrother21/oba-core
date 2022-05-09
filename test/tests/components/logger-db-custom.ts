@@ -1,14 +1,14 @@
 import {J} from "../../utils";
 import OB,{AppError} from "@onebro/oba-common";
-import {OBACoreApi,coreConfig,WinstonQueryOpts} from "../../../src";
+import {OBACore,coreConfig,WinstonQueryOpts} from "../../../src";
 
 export const obaCoreLoggerDbCustomInitTests = () => J.desc("Core Logger (Db Custom)",() => {
-  let core:OBACoreApi;
+  let core:OBACore;
   it("init",async () => {
     const c = coreConfig();
     c.logger.file = null;
     c.logger.db = null;
-    core = new OBACoreApi(c);
+    core = new OBACore(c);
     await core.init(1);
     J.is(core);
     J.true(core.logger);

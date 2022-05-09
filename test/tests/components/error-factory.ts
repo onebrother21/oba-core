@@ -1,17 +1,17 @@
 import {J} from "../../utils";
 import {
-  OBACoreApi,
+  OBACore,
   OBACoreConfig,
   coreConfig
 } from "../../../src";
 import OB from "@onebro/oba-common";
 
 export const obaCoreErrorFactoryInitTests = () => J.desc("Core Error Factory",() => {
-  let core:OBACoreApi,c:OBACoreConfig;
+  let core:OBACore,c:OBACoreConfig;
   it("init",async () => {
     const {errors} = coreConfig();
     c = {errors};
-    core = new OBACoreApi(c);
+    core = new OBACore(c);
     await core.init();
     J.is(core);
     J.true(core.e);
