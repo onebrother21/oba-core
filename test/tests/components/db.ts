@@ -23,13 +23,13 @@ export const obaCoreDBInitTests = () => J.desc("Core DB",() => {
       J.true(core.db);
     },1E9);
     it(`has connection`,async () => {
-      J.true(core.db.get());
+      J.true(core.db?.get());
     },1E9);
     it(`has "model" method`,async () => {
-      model = await core.db.model("OBA_Core_Model",schema,"oba_core_models");
-      J.prop(core.db.get().models,"OBA_Core_Model");
+      model = await core.db?.model("OBA_Core_Model",schema,"oba_core_models");
+      J.prop(core.db?.get().models,"OBA_Core_Model");
     },1E9);
-    it(`print component`,async () => {core.db.print()},1E9);
+    it(`print component`,async () => {core.db?.print()},1E9);
   });
   J.desc("Mongoose Model",() => {
     it(`create & save`,async () => {

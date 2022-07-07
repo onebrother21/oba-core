@@ -28,7 +28,7 @@ const setDefaultConfigWithEnvironment = () => {
                 break;
         }
     const uri = oba_common_1.default.appvar(dbVar);
-    const db = { uri, name };
+    const db = { uri, name, opts: {} };
     const logger = { label: name };
     const atRuntime = { vars, logger, db };
     const coreConfig = oba_common_1.default.mergeObj(initial, atRuntime, false);

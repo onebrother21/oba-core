@@ -6,20 +6,21 @@ export const obaCoreLoggerDbCustomInitTests = () => J.desc("Core Logger (Db Cust
   let core:OBACore;
   it("init",async () => {
     const c = coreConfig();
-    c.logger.file = null;
-    c.logger.db = null;
-    core = new OBACore(c);
-    await core.init(1);
-    J.is(core);
-    J.true(core.logger);
+    if(c.logger){
+      c.logger = {...c.logger,file:undefined,db:undefined};
+      core = new OBACore(c);
+      await core.init(1);
+      J.is(core);
+      J.true(core.logger);
+    }
   },1e9);
-  it(`has db logger`,async () => {J.is(core.logger.dbCustom);},1e9);
+  it(`has db logger`,async () => {J.is(core.logger?.dbCustom);},1e9);
   it(`has logging methods`,async () => {
-    J.is(core.logger.dbCustom.access);
-    J.is(core.logger.dbCustom.error);
-    J.is(core.logger.dbCustom.info);
+    J.is(core.logger?.dbCustom?.access);
+    J.is(core.logger?.dbCustom?.error);
+    J.is(core.logger?.dbCustom?.info);
   },1e9);
-  it(`has query method`,async () => {J.is(core.logger.dbCustom.query);},1e9);
+  it(`has query method`,async () => {J.is(core.logger?.dbCustom?.query);},1e9);
   it(`log msg from error`,async () => {
     const meta = new AppError({
       name:"UserInputError",
@@ -29,7 +30,7 @@ export const obaCoreLoggerDbCustomInitTests = () => J.desc("Core Logger (Db Cust
       stack:"...stacktraces here",
     }).json();
     try {
-      const info = await core.logger.postLogMsg("error",OB.stringify(meta));
+      const info = await core.logger?.postLogMsg("error",OB.stringify(meta));
       J.is(info);
     }
     catch(e){OB.error(e);}
@@ -42,15 +43,15 @@ export const obaCoreLoggerDbCustomInitTests = () => J.desc("Core Logger (Db Cust
       status:200,
     };
     try {
-      const info = await core.logger.postLogMsg("access",OB.stringify(meta));
+      const info = await core.logger?.postLogMsg("access",OB.stringify(meta));
       J.is(info);
     }
     catch(e){OB.error(e);}
   },1e9);
   it(`has log collection`,async () => {
     await OB.sleep(10);
-    const connection = core.db.get();
-    const logName = core.config.logger.dbCustom[0].name;
+    const connection = core.db?.get();
+    const logName = core.config.logger?.dbCustom?.[0].name;
     const collections = connection && logName?await connection.db.listCollections().toArray():null;
     //OB.log(collections);
     //const hasCollection = isDbLogger && collection;
@@ -69,5 +70,5 @@ export const obaCoreLoggerDbCustomInitTests = () => J.desc("Core Logger (Db Cust
     }
     catch(e){OB.error(e);throw e;}
   },1E9);
-  it(`print component`,async () => {core.logger.print()},1E9);
+  it(`print component`,async () => {core.logger?.print()},1E9);
 });

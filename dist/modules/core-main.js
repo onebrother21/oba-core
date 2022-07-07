@@ -18,15 +18,15 @@ class OBACore extends oba_common_1.Component {
     constructor() {
         super(...arguments);
         this.init = (startDb) => __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c;
+            var _a, _b;
             const { config: { db, logger, e, errors, vars } } = this;
             this.vars = vars || null;
-            this.errors = e || errors ? new error_factory_main_1.OBACoreErrorFactory(e || errors) : null;
+            this.errors = new error_factory_main_1.OBACoreErrorFactory(e || errors || {});
             this.db = db ? new db_main_1.OBACoreDB(db) : null;
             this.logger = logger ? new logger_main_1.OBACoreLogger(logger) : null;
-            yield ((_a = this.e) === null || _a === void 0 ? void 0 : _a.init());
-            yield ((_b = this.db) === null || _b === void 0 ? void 0 : _b.init(startDb));
-            yield ((_c = this.logger) === null || _c === void 0 ? void 0 : _c.init(this.db));
+            yield this.e.init();
+            yield ((_a = this.db) === null || _a === void 0 ? void 0 : _a.init(startDb));
+            yield ((_b = this.logger) === null || _b === void 0 ? void 0 : _b.init(this.db));
         });
     }
     get e() { return this.errors; }

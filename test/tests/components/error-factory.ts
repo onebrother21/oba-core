@@ -9,8 +9,8 @@ import OB from "@onebro/oba-common";
 export const obaCoreErrorFactoryInitTests = () => J.desc("Core Error Factory",() => {
   let core:OBACore,c:OBACoreConfig;
   it("init",async () => {
-    const {errors} = coreConfig();
-    c = {errors};
+    const {vars,errors} = coreConfig();
+    c = {vars,errors};
     core = new OBACore(c);
     await core.init();
     J.is(core);

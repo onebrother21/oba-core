@@ -8,25 +8,25 @@ export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() =
   let core:OBACore;
   it("init",async () => {
     const c = coreConfig();
-    const dirname = path.join(__dirname,"/../../../logs");
-    c.logger.file = c.logger.file.map(t => ({...t,dirname}));
-    c.logger.db = null;
-    c.logger.dbCustom = null;
-    core = new OBACore(c);
-    await core.init();
-    J.is(core);
-    J.true(core.logger);
+    if(c.logger && c.logger.file){
+      const dirname = path.join(__dirname,"/../../../logs");
+      c.logger = {...c.logger,db:undefined,dbCustom:undefined,file:c.logger.file.map(t => ({...t,dirname}))};
+      core = new OBACore(c);
+      await core.init();
+      J.is(core);
+      J.true(core.logger);
+    }
   },1e9);
-  it(`has file logger`,async () => J.is(core.logger.file),1e9);
+  it(`has file logger`,async () => J.is(core.logger?.file),1e9);
   it(`has logging methods`,async () => {
-    J.is(core.logger.file.access);
-    J.is(core.logger.file.warn);
-    J.is(core.logger.file.error);
-    J.is(core.logger.file.info);
+    J.is(core.logger?.file?.access);
+    J.is(core.logger?.file?.warn);
+    J.is(core.logger?.file?.error);
+    J.is(core.logger?.file?.info);
   },1e9);
-  it(`has query method`,async () => J.is(core.logger.file.query),1e9);
+  it(`has query method`,async () => J.is(core.logger?.file?.query),1e9);
   it(`has logs directory`,async () => {
-    const dirname = core.config.logger.file[0].dirname;
+    const dirname = core.config.logger?.file?.[0].dirname as string;
     const hasDir = fs.existsSync(dirname);
     J.true(hasDir);
   },1e9);
@@ -39,7 +39,7 @@ export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() =
       stack:"...stacktraces here",
     }).json(1));
     try {
-      const info = await core.logger.postLogMsg("error",meta);
+      const info = await core.logger?.postLogMsg("error",meta);
       J.is(info);
     }
     catch(e){OB.error(e);}
@@ -52,7 +52,7 @@ export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() =
       status:200,
     });
     try {
-      const info = await core.logger.postLogMsg("access",meta);
+      const info = await core.logger?.postLogMsg("access",meta);
       J.is(info);
     }
     catch(e){OB.error(e);}
@@ -60,7 +60,7 @@ export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() =
   it(`runs log query`,async () => {
     await OB.sleep(500);
     const aDayAgo = new Date().getTime() - 25 * 24 * 60 * 60 * 1000;
-    const Q = core.logger.file.query.bind(core.logger.file) as Function;
+    const Q = core.logger?.file?.query.bind(core.logger?.file) as Function;
     const q:WinstonQueryOpts = {
       from:new Date(aDayAgo),
       until:new Date(),
@@ -70,13 +70,13 @@ export const obaCoreLoggerFileInitTests = () => J.desc("Core Logger (File)",() =
       fields:["time"]
     };
     const cb = (done:Function,fail:Function,e:Error,results:any) => e?fail(e):done(results);
-    const resultsObj:{file?:any[];} = await new Promise((done,fail) => core.logger.file.query(q,cb.bind(null,done,fail)));
+    const resultsObj:{file?:any[];} = await new Promise((done,fail) => core.logger?.file?.query(q,cb.bind(null,done,fail)));
     const {file:results_} = resultsObj||{};
-    const results = results_.map((m:any) => OB.parse(m));
+    const results = results_?.map((m:any) => OB.parse(m));
     OB.info("query results",{results});
     J.is(results);
     J.arr(results);
     //J.gt(results.length,0);
   },1E9);
-  it(`print component`,async () => {core.logger.print()},1E9);
+  it(`print component`,async () => {core.logger?.print()},1E9);
 });

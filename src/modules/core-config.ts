@@ -4,7 +4,7 @@ import { OBACoreConfig } from "./core-main";
 
 const setDefaultConfigWithEnvironment = ():OBACoreConfig => {
   const env = OB.env().toLocaleUpperCase();
-  const name = OB.appvar("_NAME");
+  const name = OB.appvar("_NAME") as string;
   const mode = OB.mode();
   const verbose = OB.verbose();
   const version = OB.version();
@@ -16,10 +16,10 @@ const setDefaultConfigWithEnvironment = ():OBACoreConfig => {
     case OB.isEnv("live"):dbVar += "_LIVE";break;
     default:dbVar += "_LOCAL";break;
   }
-  const uri = OB.appvar(dbVar);
-  const db =  {uri,name};
+  const uri = OB.appvar(dbVar) as string;
+  const db =  {uri,name,opts:{}};
   const logger = {label:name} as any;
-  const atRuntime:DeepPartial<OBACoreConfig> = {vars,logger,db};
+  const atRuntime:Partial<OBACoreConfig> = {vars,logger,db};
   const coreConfig = OB.mergeObj(initial,atRuntime,false) as OBACoreConfig;
   return coreConfig;
 };
