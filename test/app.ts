@@ -7,10 +7,16 @@ export const App = {
   refresh:async () => {
     const c = coreConfig();
     if(c.db){
-      const {uri,opts} = c.db;
-      if(OB.match(/mongodb\+srv/,uri)) return;
-      const db = mongoose.createConnection(uri,opts);
-      await db.dropDatabase();
+      try {
+        OB.log(`dropping MongoDB database`);
+        const {uri,opts} = c.db;
+        if(OB.match(/mongodb\+srv/,uri)) return;
+        const db = mongoose.createConnection(uri,opts);
+        await db.dropDatabase();
+      }
+      catch(e){
+        OB.warn(`MongoDB connection failed -> ${e.message||e}`);
+      }
     }
   },
   init:async (startDb?:AnyBoolean) => {
