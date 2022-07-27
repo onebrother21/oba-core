@@ -47,7 +47,7 @@ class OBACoreDB extends oba_common_1.Component {
         this.init = (start) => __awaiter(this, void 0, void 0, function* () {
             if (start) {
                 const { name, uri, opts } = this.config;
-                const dbStr = `-> ${name.toLocaleUpperCase()} @ ${uri}`;
+                const dbStr = `-> ${name.toLocaleUpperCase()}`;
                 oba_common_1.default.trace(`Attempting to connect ${dbStr}`);
                 try {
                     this.connection = yield mongoose_1.default.createConnection(uri, opts).asPromise();

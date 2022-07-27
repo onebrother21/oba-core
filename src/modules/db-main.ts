@@ -12,7 +12,7 @@ export class OBACoreDB extends Component<OBACoreDBConfig> {
   init = async (start?:AnyBoolean) => {
     if(start){
       const {name,uri,opts} = this.config;
-      const dbStr = `-> ${name.toLocaleUpperCase()} @ ${uri}`;
+      const dbStr = `-> ${name.toLocaleUpperCase()}`;
       OB.trace(`Attempting to connect ${dbStr}`);
       try {
         this.connection = await mongoose.createConnection(uri,opts).asPromise();
