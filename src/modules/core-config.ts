@@ -1,5 +1,5 @@
 import config from "config";
-import OB,{ DeepPartial } from "@onebro/oba-common";
+import OB from "@onebro/oba-common";
 import { OBACoreConfig } from "./core-main";
 
 const setDefaultConfigWithEnvironment = ():OBACoreConfig => {
