@@ -2,10 +2,8 @@
   "appconfig":{
     "vars":{
       "name":"thisApp",
-      "env":"dev",
-      "mode":"init",
-      "version":"1.1.0",
-      "verbose":false
+      "env":"dev-live-db",
+      "version":"1.0.0"
     },
     "logger":{
       "file":[
@@ -21,13 +19,13 @@
           "metaKey":"meta",
           "decolorize":true,
           "tryReconnect":true,
-          "expreAfterSeconds":120
+          "expireAfterSeconds":120
         }
       ],
       "dbCustom":[
-        {"level":"error","name":"error_log","dateStub":"mm"},
-        {"level":"access","name":"access_log","dateStub":"mm"},
-        {"level":"info","name":"info_log","dateStub":"mm"}
+        {"level":"error","collection":"error_log","dateStub":"mm"},
+        {"level":"access","collection":"access_log","dateStub":"mm"},
+        {"level":"info","collection":"info_log","dateStub":"mm"}
       ]
     },
     "db":{

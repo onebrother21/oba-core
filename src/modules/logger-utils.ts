@@ -22,10 +22,11 @@ export const printMsg = (m:LogEntry) => {
   const filetrans = OB.obj(msg) && !meta;
   const dbtrans = OB.str(msg) && meta;
   return OB.stringify({
-  time,label,level:m.level.toLocaleUpperCase(),
-  ...filetrans?{meta:msg as AnyObj}:null,
-  ...dbtrans?{message:msg as string,meta}:null,
-});};
+    time,label,level:level.toLocaleUpperCase(),
+    ...filetrans?{meta:msg as AnyObj}:null,
+    ...dbtrans?{message:msg as string,meta}:null,
+  });
+};
 export const makeFormat = (name:string) => combine(label({label:name}),timestamp({"alias":"time"}),printf(printMsg));
 export const makeFileTransport = (o:WinstonTransportFileConfig) => new transports.File({
   format:levelGuard(o.level),

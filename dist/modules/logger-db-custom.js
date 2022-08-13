@@ -11,12 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OBACoreLoggerDbCustomWrapper = void 0;
 const mongoose_1 = require("mongoose");
-const logMsg = new mongoose_1.Schema({ level: { type: String }, label: { type: String }, meta: { type: Object } }, {
+const logMsgSchema = new mongoose_1.Schema({ level: { type: String }, label: { type: String }, meta: { type: Object } }, {
     timestamps: { createdAt: "timestamp", updatedAt: false },
     toObject: { virtuals: true },
     toJSON: { virtuals: true }
 });
-logMsg.virtual("other").get(function () { return this.name + "OtherShit"; });
+logMsgSchema.virtual("other").get(function () { return Date.now(); });
 class OBACoreLoggerDbCustomWrapper {
     constructor(label, config) {
         this.label = label;
@@ -27,9 +27,9 @@ class OBACoreLoggerDbCustomWrapper {
                 for (let i = 0, l = this.config.length; i < l; i++) {
                     const opts = this.config[i];
                     const level = opts.level;
-                    const nameCap = opts.name.toUpperCase();
-                    const name = opts.name.toLowerCase();
-                    this.models[level] = yield db.model(nameCap, logMsg, name);
+                    const modelName = opts.collection.toUpperCase();
+                    const collection = opts.collection.toLowerCase();
+                    this.models[level] = yield db.model(modelName, logMsgSchema, collection);
                     this[level] = this.create.bind(this, level);
                 }
             }

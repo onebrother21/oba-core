@@ -7,12 +7,12 @@ import {WinstonLoggerLevels,WinstonTransportCustomDbConfig} from "./logger-types
 export type LogMsg = AppEntity & Document;
 export type WinstonLoggerLevelKeys = Keys<WinstonLoggerLevels>;
 
-const logMsg = new Schema({level:{type:String},label:{type:String},meta:{type:Object}},{
+const logMsgSchema = new Schema({level:{type:String},label:{type:String},meta:{type:Object}},{
   timestamps:{createdAt:"timestamp",updatedAt:false},
   toObject:{virtuals:true},
   toJSON:{virtuals:true}
 });
-logMsg.virtual("other").get(function(){return this.name + "OtherShit";});
+logMsgSchema.virtual("other").get(function(){return Date.now();});
 
 export type OBACoreLoggerDbCustomMethods = Enum<(meta:any) => Promise<any>,undefined,WinstonLoggerLevelKeys>;
 export interface OBACoreLoggerDbCustomWrapper extends OBACoreLoggerDbCustomMethods {}
@@ -25,9 +25,9 @@ export class OBACoreLoggerDbCustomWrapper {
       for(let i = 0,l = this.config.length;i<l;i++){
         const opts = this.config[i];
         const level = opts.level as WinstonLoggerLevelKeys;
-        const nameCap = opts.name.toUpperCase();
-        const name = opts.name.toLowerCase();
-        this.models[level] = await db.model<LogMsg,Model<LogMsg>>(nameCap,logMsg,name);
+        const modelName = opts.collection.toUpperCase();
+        const collection = opts.collection.toLowerCase();
+        this.models[level] = await db.model<LogMsg,Model<LogMsg>>(modelName,logMsgSchema,collection);
         this[level] = this.create.bind(this,level);
       }
     }

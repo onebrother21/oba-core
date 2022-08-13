@@ -10,6 +10,6 @@ export declare class OBACoreDB extends Component<OBACoreDBConfig> {
     init: (start?: AnyBoolean) => Promise<void>;
     shutdown: () => Promise<void>;
     startNative: (name: string, uri: string, opts: MongoClientOptions) => Promise<import("mongodb").Db>;
-    model: <T extends mongoose.Document<any, any, any>, U extends mongoose.Model<T, {}, {}, {}>>(modelName: string, schema: mongoose.Schema<T, mongoose.Model<T, any, any, any>, any, any>, collection: string) => Promise<U>;
+    model: <T extends mongoose.Document<any, any, any>, U extends mongoose.Model<T, {}, {}, {}, any>>(modelName: string, schema: mongoose.Schema<T, mongoose.Model<T, any, any, any, any>, {}, {}, {}, {}, "type", mongoose.ObtainDocumentType<any, T, "type">>, collection: string) => Promise<U>;
 }
 export default OBACoreDB;

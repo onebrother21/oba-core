@@ -51,7 +51,7 @@ export const obaCoreLoggerDbCustomInitTests = () => J.desc("Core Logger (Db Cust
   it(`has log collection`,async () => {
     await OB.sleep(10);
     const connection = core.db?.get();
-    const logName = core.config.logger?.dbCustom?.[0].name;
+    const logName = core.config.logger?.dbCustom?.[0].collection;
     const collections = connection && logName?await connection.db.listCollections().toArray():null;
     //OB.log(collections);
     //const hasCollection = isDbLogger && collection;

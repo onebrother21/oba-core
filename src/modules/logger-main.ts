@@ -38,7 +38,7 @@ export class OBACoreLogger extends Component<OBACoreLoggerConfig> {
       await logger.init(db);
       this.dbCustom = logger;
     }
-  }
+  };
   init = async (db?:OBACoreDB) => {
     this.makeLocalDir = makeLocalDir;
     this.postLogMsg = postLogMsg.bind(null,this);

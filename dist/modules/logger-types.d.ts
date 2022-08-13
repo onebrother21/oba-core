@@ -35,9 +35,9 @@ export declare type WinstonTransportMongoDbConfig = WinstonTransportConfig & {
     expireAfterSeconds?: number;
 };
 export declare type WinstonTransportCustomDbConfig = WinstonTransportConfig & {
-    name: string;
-    dateStub?: string;
+    collection: string;
     capSize: number;
+    dateStub?: string;
 };
 export declare type WinstonLoggerConfigs = {
     file?: WinstonTransportFileConfig[];
