@@ -14,7 +14,7 @@
       "db":[
         {
           "level":"info",
-          "collection":"all_log",
+          "collection":"all_logs",
           "options":{"useUnifiedTopology":true},
           "metaKey":"meta",
           "decolorize":true,
